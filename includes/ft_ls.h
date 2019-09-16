@@ -6,7 +6,7 @@
 /*   By: princesse <princesse@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/30 15:24:04 by cylemair          #+#    #+#             */
-/*   Updated: 2019/09/10 21:41:37 by princesse        ###   ########.fr       */
+/*   Updated: 2019/09/15 21:48:45 by princesse        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@
 # define _UNKNOW 		"No such file or directory\n"
 # define _PL(X)			ft_putendl(X);
 # define PUT(X)			ft_putstr(X);
+# define _READ(X)		reader(X, X)
 # define RED(X) 		ft_putstr("\033[1;31m"); \
 						ft_putstr(X);
 # define GREEN(X) 		ft_putstr("\033[0;32m"); \
@@ -84,7 +85,9 @@ void		reader(t_reader *current, t_reader *head);
 void		reader_sub(t_reader *current, t_reader *head);
 t_reader    *create(struct stat	sb, struct dirent *dir);
 t_reader    *lst_append(t_reader **head, t_reader *last);
-void		swap_file(t_reader **a, t_reader **b);
+void		sort_map(t_reader **file, int (*f)(t_reader *, t_reader *));
+int			cmp_name(t_reader *a, t_reader *b);
+int			cmp_time(t_reader *a, t_reader *b);
 // void   		free_reader(t_reader **lst);
 
 #endif

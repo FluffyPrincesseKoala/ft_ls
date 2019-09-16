@@ -6,7 +6,7 @@
 /*   By: princesse <princesse@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/15 15:13:59 by cylemair          #+#    #+#             */
-/*   Updated: 2019/09/10 21:48:37 by princesse        ###   ########.fr       */
+/*   Updated: 2019/09/16 03:18:51 by princesse        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,5 +178,18 @@ int					main(int ac, char **av)
 	meta.array = ft_strsplit(meta.arg.path, ':');
 	meta.file = open_directory(meta);
 
+	GREEN("BEFOR_SORTING\n");
+	RESET();
+	_READ(meta.file);
+
 	
+	GREEN("AFTER_SORTING_BY_NAME\n");
+	RESET();
+	sort_map(&meta.file, &cmp_name);
+	_READ(meta.file);
+
+	GREEN("AFTER_SORTING_BY_TIME\n");
+	RESET();
+	sort_map(&meta.file, &cmp_time);
+	_READ(meta.file);
 }

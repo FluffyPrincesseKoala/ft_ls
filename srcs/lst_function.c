@@ -6,7 +6,7 @@
 /*   By: princesse <princesse@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/30 22:08:06 by princesse         #+#    #+#             */
-/*   Updated: 2019/09/10 22:04:05 by princesse        ###   ########.fr       */
+/*   Updated: 2019/09/16 03:42:14 by princesse        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,13 +147,24 @@ t_reader			*open_directory(t_ls meta)
 	return (new);
 }
 // sorting
-void			swap_file(t_reader **a, t_reader **b)
-{
-	t_reader	*c;
 
-	c = *a;
-	*a = *b;
-	*b = c;
+void			swap_data(t_reader **a, t_reader **b)
+{
+	struct s_reader	*c;
+	struct dirent	*dir;
+	struct stat		sb;
+
+	c = ((*a)->sub);
+	dir = ((*a)->dir);
+	sb = ((*a)->sb);
+	
+	((*a)->sub) = ((*b)->sub);
+	((*a)->dir) = ((*b)->dir);
+	((*a)->sb) = ((*b)->sb);
+
+	((*b)->sub) = c;
+	((*b)->dir) = dir;
+	((*b)->sb) = sb;
 }
 
 int				cmp_name(t_reader *a, t_reader *b)
@@ -163,5 +174,38 @@ int				cmp_name(t_reader *a, t_reader *b)
 
 int				cmp_time(t_reader *a, t_reader *b)
 {
-	return (a->sb.st_mtime - b->sb.st_mtime)
+	//printf("%s\t\t%zu\t>=\t%s\t\t%zu\n", a->dir->d_name, a->sb.st_mtime, b->dir->d_name, b->sb.st_mtime);
+	if (a->sb.st_mtime > b->sb.st_mtime)
+		return (1);
+	if (a->sb.st_mtime = b->sb.st_mtime)
+		return (-1);
+	return(0);
+}
+
+void			sort_map(t_reader **file, int (*f)(t_reader *, t_reader *))
+{
+	t_reader	*head;
+	t_reader	*current;
+	int			swaped;
+
+	head = *file;
+	while (head)
+	{
+		swaped = 0;
+		current = head->next;
+		while (current && !swaped)
+		{
+			// printf("(head = %s	<	current = %s) ? %s\n",
+			// 	head->dir->d_name, current->dir->d_name,
+			// 	((*f)(head, current)) ? "OUI" : "NON");
+			if ((*f)(head, current) >= 0)
+			{
+				swap_data(&head, &current);
+				swaped = 1;
+			}
+			current = current->next;
+		}
+		if (!swaped && !current)
+			head = head->next;
+	}
 }

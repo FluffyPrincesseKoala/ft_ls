@@ -72,7 +72,7 @@ RM		=		rm -rf
 
 all: $(NAME)
 
-$(NAME): $(OBJS)
+$(NAME): $(OBJS) $(SRCS)
 	$(CC) -Wall -Wextra -Werror -c $(SRCS)
 	ar rc $(NAME) $(OBJS)
 	ranlib $(NAME)

@@ -35,6 +35,7 @@
 # define _UNKNOW 		"No such file or directory\n"
 # define _PL(X)			ft_putendl(X);
 # define PUT(X)			ft_putstr(X);
+# define PN(X)			ft_putnbr(X);
 # define _READ(X)		reader(X, X)
 # define RED(X) 		ft_putstr("\033[1;31m"); \
 						ft_putstr(X);
@@ -66,6 +67,7 @@ typedef struct		s_reader
 {
 	struct stat		sb;
 	struct dirent	*dir;
+	char			*path;
 	struct s_reader	*next;
 	struct s_reader	*sub;
 }					t_reader;
@@ -83,7 +85,7 @@ t_reader	*open_directory(t_ls meta);
 t_reader	*read_directory(DIR *directory, char *path);
 void		reader(t_reader *current, t_reader *head);
 void		reader_sub(t_reader *current, t_reader *head);
-t_reader    *create(struct stat	sb, struct dirent *dir);
+t_reader    *create(struct stat	sb, struct dirent *dir, char *path);
 t_reader    *lst_append(t_reader **head, t_reader *last);
 void		sort_map(t_reader **file, int (*f)(t_reader *, t_reader *));
 int			cmp_name(t_reader *a, t_reader *b);

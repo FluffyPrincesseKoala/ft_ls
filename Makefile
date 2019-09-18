@@ -36,7 +36,7 @@ $(NAME): $(OBJS) $(LIBFT)
 	$(CC) -o $(NAME) $(OBJS) $(LDFLAGS) $(LIBFT)
 
 $(LIBFT):
-	make -C libft/
+	make re -C libft/
 
 clean:
 	$(RM) $(OBJS)

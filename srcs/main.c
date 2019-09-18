@@ -18,36 +18,40 @@ char		*str_add_delim(char *dest, char *str, char delim)
 	int		i;
 	int		j;
 
-	if (!(ft_strlen(dest) + ft_strlen(str))
-		|| !(new = malloc(sizeof(char) * (ft_strlen(dest) + ft_strlen(str)
-		+ ((ft_strlen(dest)) ? 2 : 1)))))
+	if (!(ft_strlen(dest) + ft_strlen(str))	|| !(new = malloc(sizeof(char)
+		* (ft_strlen(dest) + ft_strlen(str) + 2))))
 		return (NULL);
-	i = -1;
-	j = -1;
+	i = 0;
+	j = 0;
 	if (dest)
 	{
-		while (dest[++i])
+		while (dest[i])
+		{
 			new[i] = dest[i];
-		new[i] = delim;
+			i++;
+		}
+		new[i++] = delim;
 		ft_strdel(&dest);
 	}
-	while (str[++j])
-		new[++i] = str[j];
-	new[++i] = '\0';
+	while (str[j])
+	{
+		new[i++] = str[j++];
+	}
+	new[i] = '\0';
 	return (new);
 }
 
 t_opt		read_arg(t_opt arg, char c)
 {
-	if ((c == 'l'))
+	if (c == 'l')
 		arg._l = 1;
-	else if ((c == 'R'))
+	else if (c == 'R')
 		arg._R = 1;
-	else if ((c == 'a'))
+	else if (c == 'a')
 		arg._a = 1;
-	else if ((c == 'r'))
+	else if (c == 'r')
 		arg._r = 1;
-	else if ((c == 't'))
+	else if (c == 't')
 		arg._t = 1;
 	return (arg);
 }
@@ -69,7 +73,7 @@ t_opt		set_arg(t_opt arg, char **av)
 		is_opt = 0;
 		is_path = (av[y][x] != '-') ? 1 : is_path;
 		if (is_path)
-			arg.path = str_add_delim(arg.path, av[y], ':');
+			arg.path = (arg.path) ? str_add_delim(arg.path, av[y], ':') : ft_strdup(av[y]);
 		while (av[y][x] && !is_path)
 		{
 			is_opt = (av[y][x] == '-') ? 1 : is_opt;
@@ -121,17 +125,17 @@ void		print_arg(t_opt arg)
 	ft_putchar('\n');
 }
 
-void		print_dirent(DIR *directory)
-{
-	struct dirent	*dir;
-	while (directory && (dir = readdir(directory)))
-	{
-		GREEN("");
-		printf("\ninœud %d\nlen %hu\ntype %u\nname %s\n\n",
-				dir->d_ino, dir->d_reclen, dir->d_type, dir->d_name);
-	}
-	RESET();
-}
+// void		print_dirent(DIR *directory)
+// {
+// 	struct dirent	*dir;
+// 	while (directory && (dir = readdir(directory)))
+// 	{
+// 		GREEN("");
+// 		printf("\ninœud %d\nlen %hu\ntype %u\nname %s\n\n",
+// 				dir->d_ino, dir->d_reclen, dir->d_type, dir->d_name);
+// 	}
+// 	RESET();
+// }
 
 void		print_right(mode_t	st_mode)
 {
@@ -168,6 +172,28 @@ void		print_stat(t_reader *file)
 	ft_putendl(file->dir->d_name);
 }
 
+void 				free_reader(t_reader *file)
+{
+	printf("BONJOUR");
+	if (file->next)
+		free_reader(file->next);
+	if (file->sub)
+		free_reader(file->sub);
+	free(file);
+}
+
+void				free_meta(t_ls meta)
+{
+	int				i;
+
+	i = 0;
+	free(meta.arg.path);
+	while (meta.array[i])
+		free(meta.array[i++]);
+	free(meta.array);
+	free_reader(meta.file);
+}
+
 int					main(int ac, char **av)
 {
 	t_ls			meta;
@@ -182,7 +208,8 @@ int					main(int ac, char **av)
 	RESET();
 	_READ(meta.file);
 
-	
+	free_meta(meta);
+	/*
 	GREEN("AFTER_SORTING_BY_NAME\n");
 	RESET();
 	sort_map(&meta.file, &cmp_name);
@@ -191,5 +218,5 @@ int					main(int ac, char **av)
 	GREEN("AFTER_SORTING_BY_TIME\n");
 	RESET();
 	sort_map(&meta.file, &cmp_time);
-	_READ(meta.file);
+	_READ(meta.file);*/
 }

@@ -108,9 +108,9 @@ t_reader			*read_directory(DIR *directory, char *path)
 		//printf("path %s\n", path);
 	while (directory && (dir = readdir(directory)))
 	{
-		// if (ft_strcmp(dir->d_name, ".") && ft_strcmp(dir->d_name, ".."))
 		// 	printf("len %hu\ntype %u\nname %s\n\n", dir->d_reclen, dir->d_type, dir->d_name);
-		new_path = ft_strjoin(path, ft_strjoin("/", dir->d_name));
+		 if (ft_strcmp(dir->d_name, ".") && ft_strcmp(dir->d_name, ".."))
+			new_path = ft_strjoin(path, ft_strjoin("/", dir->d_name));
 		if (stat(new_path, &sb))
 		{
 			PR(dir->d_name, "permission pas tres autorized\n");

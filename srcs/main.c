@@ -174,7 +174,6 @@ void		print_stat(t_reader *file)
 
 void 				free_reader(t_reader *file)
 {
-	printf("BONJOUR");
 	if (file->next)
 		free_reader(file->next);
 	if (file->sub)

@@ -10,7 +10,7 @@
 #                                                                              #
 # **************************************************************************** #
 
-CC		=		gcc -g3
+CC		=		gcc -g3#-fsanitize=address
 
 LDFLAGS	+=		-Llibft -Werror -Wall -Wextra
 

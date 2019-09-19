@@ -6,7 +6,7 @@
 /*   By: princesse <princesse@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/30 15:24:04 by cylemair          #+#    #+#             */
-/*   Updated: 2019/09/15 21:48:45 by princesse        ###   ########.fr       */
+/*   Updated: 2019/09/19 21:15:39 by princesse        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,13 +60,13 @@ typedef struct		s_opt
 	int				_a;
 	int				_r;
 	int				_t;
-	char			*path;
 }					t_opt;
 
 typedef struct		s_reader
 {
 	struct stat		sb;
 	struct dirent	*dir;
+	char			*name;
 	char			*path;
 	struct s_reader	*next;
 	struct s_reader	*sub;

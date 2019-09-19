@@ -6,7 +6,7 @@
 /*   By: princesse <princesse@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/30 22:08:06 by princesse         #+#    #+#             */
-/*   Updated: 2019/09/16 03:42:14 by princesse        ###   ########.fr       */
+/*   Updated: 2019/09/19 22:24:47 by princesse        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ t_reader        *create(struct stat	sb, struct dirent *dir, char *path)
 		return (NULL);
 	new->sb = sb;
 	new->dir = dir;
+	new->name = ft_strdup((char*)dir->d_name);	
 	new->path = path;
 	new->sub = NULL;
 	new->next = NULL;
@@ -47,7 +48,7 @@ void			reader_sub(t_reader *current, t_reader	*head)
 {
 	if (current->sub)
 	{
-		GREEN(current->dir->d_name);
+		GREEN(current->name);
 		PUT("\n");		
 		RESET();
 		reader(current->sub, current->sub);
@@ -62,13 +63,11 @@ void			reader(t_reader *current, t_reader	*head)
 
 	time = ctime(&current->sb.st_mtime);
 	time = ft_strsub(time, 0, _LEN(time) - 1);
-	if (current->dir->d_name){
-		CYAN(current->dir->d_name);
-		PUT((_LEN(current->dir->d_name) > 7) ? "\t" : "\t\t");
-		PUT(time);
-		PUT("\n");
-		RESET();
-	}
+	CYAN(current->name);
+	PUT((_LEN(current->name) > 7) ? "\t" : "\t\t");
+	PUT(time);
+	PUT("\n");
+	RESET();
 	if (current->next)
 		reader(current->next, head);
 	else
@@ -104,39 +103,34 @@ t_reader			*read_directory(DIR *directory, char *path)
 	char			*new_path;
 
 	head = NULL;
-	//if (directory)
-		//printf("path %s\n", path);
+	new_path = NULL;
 	while (directory && (dir = readdir(directory)))
 	{
-		// 	printf("len %hu\ntype %u\nname %s\n\n", dir->d_reclen, dir->d_type, dir->d_name);
-		 if (ft_strcmp(dir->d_name, ".") && ft_strcmp(dir->d_name, ".."))
-			new_path = ft_strjoin(path, ft_strjoin("/", dir->d_name));
-		if (stat(new_path, &sb))
+		new_path = ft_strjoin(path, ft_strjoin("/", dir->d_name));
+		if ((stat(new_path, &sb)))
 		{
 			PR(dir->d_name, "permission pas tres autorized\n");
 			if (errno == ENOENT)
 				PR("errno :", "\n");
 		}
-		else// if (ft_strcmp(dir->d_name, ".") && ft_strcmp(dir->d_name, ".."))
+		else
 		{
 			tmp = lst_append(&head, create(sb, dir, path));
 			if (IS_DIR(sb, dir)){
-
-				//printf("File =  %s\n", dir->d_name);
 				if (!(sub = opendir(new_path)))
 					PR(dir->d_name, "SHIT here we go encore\n");
-				//printf("\t\t[%s]\n", new_path);
 				tmp->sub = read_directory(sub, new_path);
+				closedir(sub);
 			}
 		}
-		free(new_path);
+		ft_strdel(&new_path);
 	}
-	closedir(directory);
 	return (head);
 }
 
 t_reader			*open_directory(t_ls meta)
 {
+	struct stat		sb;
 	DIR				*buff;
 	int				i;
 	t_reader		*new;
@@ -146,9 +140,16 @@ t_reader			*open_directory(t_ls meta)
 	head = NULL;
 	while (meta.array[i])
 	{
-		if (!(buff = opendir(meta.array[i])))
+		if (!(buff = opendir(meta.array[i])) || stat(meta.array[i], &sb))
+		{
 			PR(meta.array[i], _UNKNOW);
-		new = lst_append(&head, read_directory(buff, meta.array[i]));
+		}
+		else
+		{
+			//head = lst_append(&head, create(sb, dir, meta.array[i]));
+			new = lst_append(&head, read_directory(buff, meta.array[i]));
+			closedir(buff);			
+		}
 		i += 1;
 	}
 	return (new);
@@ -161,26 +162,30 @@ void			swap_data(t_reader **a, t_reader **b)
 	struct dirent	*dir;
 	struct stat		sb;
 	char			*path;
+	char			*name;
 
 	c = ((*a)->sub);
 	dir = ((*a)->dir);
 	sb = ((*a)->sb);
 	path = ((*a)->path);
+	name = ((*a)->name);
 	
 	((*a)->sub) = ((*b)->sub);
 	((*a)->dir) = ((*b)->dir);
 	((*a)->sb) = ((*b)->sb);
 	((*a)->path) = ((*b)->path);
+	((*a)->name) = ((*b)->name);
 
 	((*b)->sub) = c;
 	((*b)->dir) = dir;
 	((*b)->sb) = sb;
 	((*b)->path) = path;
+	((*b)->name) = name;
 }
 
 int				cmp_name(t_reader *a, t_reader *b)
 {
-	return (ft_strcmp(a->dir->d_name, b->dir->d_name));
+	return (ft_strcmp(a->name, b->name));
 }
 
 int				cmp_time(t_reader *a, t_reader *b)
@@ -209,7 +214,7 @@ void			sort_map(t_reader **file, int (*f)(t_reader *, t_reader *))
 			// printf("(head = %s	<	current = %s) ? %s\n",
 			// 	head->dir->d_name, current->dir->d_name,
 			// 	((*f)(head, current)) ? "OUI" : "NON");
-			if ((*f)(head, current) < 0)
+			if ((*f)(head, current) > 0)
 			{
 				swap_data(&head, &current);
 				swaped = 1;

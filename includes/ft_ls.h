@@ -31,6 +31,7 @@
 # define IS_DIR(F, D)	(S_ISDIR(F.st_mode) 			\
 						&& ft_strcmp(D->d_name, ".")	\
 						&& ft_strcmp(D->d_name, ".."))
+# define P_BASIC(FILE)	ft_putstr(FILE->name)
 # define _DIR(NAME) 	ft_putendl(ft_strcat(NAME, ":"));
 # define _UNKNOW 		"No such file or directory\n"
 # define _PL(X)			ft_putendl(X);
@@ -67,6 +68,7 @@ typedef struct		s_reader
 {
 	struct stat		sb;
 	struct dirent	*dir;
+	char			*name;
 	char			*path;
 	struct s_reader	*next;
 	struct s_reader	*sub;

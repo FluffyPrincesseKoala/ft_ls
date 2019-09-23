@@ -38,6 +38,7 @@ t_reader        *create(struct stat	sb, struct dirent *dir, char *path)
 	new->sb = sb;
 	new->dir = dir;
 	new->path = path;
+	new->name = ft_strdup((const char*)dir->d_name);
 	new->sub = NULL;
 	new->next = NULL;
 	return (new);

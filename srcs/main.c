@@ -6,7 +6,7 @@
 /*   By: princesse <princesse@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/15 15:13:59 by cylemair          #+#    #+#             */
-/*   Updated: 2019/09/16 03:18:51 by princesse        ###   ########.fr       */
+/*   Updated: 2019/09/19 22:14:40 by princesse        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,41 @@ t_opt		read_arg(t_opt arg, char c)
 	return (arg);
 }
 
-t_opt		set_arg(t_opt arg, char **av)
+char		**create_array(char *str)
+{
+	char	**new;
+
+
+	if (!str || !(new = malloc(sizeof(char*) * 2)))
+		return (NULL);
+	new[0] = ft_strdup(str);
+	new[1] = NULL;
+	return (new);
+}
+
+char		**array_add(char** array, char *add)
+{
+	char	**new;
+	char	i;
+
+	i = 0;
+	while (array && array[i])
+		i++;
+	if (!(new = malloc(sizeof(char*) * (i + 2))))
+		return ((array) ? array : NULL);
+	i = 0;
+	while (array[i])
+	{
+		new[i] = ft_strdup(array[i]);
+		i++;
+	}
+	new[i] = ft_strdup(add);
+	new[++i] = NULL;
+	ft_memdel((void**)array);
+	return (new);
+}
+
+t_ls		set_arg(t_ls new, char **av)
 {
 	int		i;
 	int		y;
@@ -71,57 +105,63 @@ t_opt		set_arg(t_opt arg, char **av)
 	{
 		x = 0;
 		is_opt = 0;
-		is_path = (av[y][x] != '-') ? 1 : is_path;
-		if (is_path)
-			arg.path = (arg.path) ? str_add_delim(arg.path, av[y], ':') : ft_strdup(av[y]);
+		if ((is_path = (av[y][x] != '-') ? 1 : is_path))
+		{
+			new.array = (!new.array) ? create_array(av[y]) : array_add(new.array, av[y]);
+		}		
 		while (av[y][x] && !is_path)
 		{
 			is_opt = (av[y][x] == '-') ? 1 : is_opt;
-			arg = (is_opt) ? read_arg(arg, av[y][x]) : arg;
+			new.arg = (is_opt) ? read_arg(new.arg, av[y][x]) : new.arg;
 			x += 1;
 		}
 		y += 1;
 	}
-	return (arg);
+	return (new);
 }
 
-t_opt		init_arg()
+t_ls		init_arg()
 {
-	t_opt	arg;
+	t_ls	new;
 
-	arg._l = 0;
-	arg._R = 0;
-	arg._a = 0;
-	arg._r = 0;
-	arg._t = 0;
-	arg.path = NULL;
-	return (arg);
+	new.arg._l = 0;
+	new.arg._R = 0;
+	new.arg._a = 0;
+	new.arg._r = 0;
+	new.arg._t = 0;
+	new.file = NULL;
+	new.array = NULL;
+	return (new);
 }
 
-void		print_arg(t_opt arg)
+void		print_arg(t_ls meta)
 {
-	if (arg._l == 1) {
+	if (meta.arg._l == 1) {
 		GREEN("-l ");
 	} else {
 		RED("-l ");
-	} if (arg._R == 1) {
+	} if (meta.arg._R == 1) {
 		GREEN("-R ");
 	} else {
 		RED("-R ");
-	} if (arg._a == 1) {
+	} if (meta.arg._a == 1) {
 		GREEN("-a ");
 	} else {
 		RED("-a ");
-	} if (arg._r == 1) {
+	} if (meta.arg._r == 1) {
 		GREEN("-r ");
 	} else {
 		RED("-r ");
-	} if (arg._t == 1) {
+	} if (meta.arg._t == 1) {
 		GREEN("-t ");
 	} else {
 		RED("-t ");
 	}
-	CYAN(arg.path);
+	RESET();
+	for (int i = 0; meta.array[i]; i++) {
+		PUT(meta.array[i]);
+		ft_putchar(' ');
+	}
 	ft_putchar('\n');
 }
 
@@ -172,43 +212,19 @@ void		print_stat(t_reader *file)
 	ft_putendl(file->dir->d_name);
 }
 
-void 				free_reader(t_reader *file)
-{
-	if (file->next)
-		free_reader(file->next);
-	if (file->sub)
-		free_reader(file->sub);
-	free(file);
-}
-
-void				free_meta(t_ls meta)
-{
-	int				i;
-
-	i = 0;
-	free(meta.arg.path);
-	while (meta.array[i])
-		free(meta.array[i++]);
-	free(meta.array);
-	free_reader(meta.file);
-}
-
 int					main(int ac, char **av)
 {
 	t_ls			meta;
 
-	meta.arg = set_arg(init_arg(), av);
-	print_arg(meta.arg);
+	meta = set_arg(init_arg(), av);
+	print_arg(meta);
 
-	meta.array = ft_strsplit(meta.arg.path, ':');
 	meta.file = open_directory(meta);
 
 	GREEN("BEFOR_SORTING\n");
 	RESET();
 	_READ(meta.file);
-
-	free_meta(meta);
-	/*
+	
 	GREEN("AFTER_SORTING_BY_NAME\n");
 	RESET();
 	sort_map(&meta.file, &cmp_name);
@@ -217,5 +233,5 @@ int					main(int ac, char **av)
 	GREEN("AFTER_SORTING_BY_TIME\n");
 	RESET();
 	sort_map(&meta.file, &cmp_time);
-	_READ(meta.file);*/
+	_READ(meta.file);
 }

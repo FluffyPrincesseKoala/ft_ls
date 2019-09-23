@@ -165,17 +165,27 @@ void		print_arg(t_ls meta)
 	ft_putchar('\n');
 }
 
-// void		print_dirent(DIR *directory)
-// {
-// 	struct dirent	*dir;
-// 	while (directory && (dir = readdir(directory)))
-// 	{
-// 		GREEN("");
-// 		printf("\ninœud %d\nlen %hu\ntype %u\nname %s\n\n",
-// 				dir->d_ino, dir->d_reclen, dir->d_type, dir->d_name);
-// 	}
-// 	RESET();
-// }
+/*
+**	https://en.wikipedia.org/wiki/Unix_file_types#FIFO_(named_pipe)
+**	http://manpagesfr.free.fr/man/man2/stat.2.html
+*/
+char		*print_type(mode_t m)
+{
+	if (S_ISDIR(m))
+		return ("d");
+	else if (S_ISCHR(m))
+		return ("c");
+	else if (S_ISBLK(m))
+		return ("b");
+	else if (S_ISFIFO(m))
+		return ("p");
+	else if (S_ISLNK(m))
+		return ("l");
+	else if (S_ISSOCK(m))
+		return ("s");
+	else
+		return ("-");	
+}
 
 void		print_right(mode_t	st_mode)
 {

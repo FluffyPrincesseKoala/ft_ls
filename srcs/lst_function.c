@@ -29,16 +29,15 @@
 // //    free(lst)
 // }
 
-t_reader        *create(struct stat	sb, struct dirent *dir, char *path)
+t_reader        *create(struct stat	sb, char *name, char *path)
 {
 	t_reader    *new;
 
 	if (!(new = malloc(sizeof(t_reader))))
 		return (NULL);
 	new->sb = sb;
-	new->dir = dir;
 	new->path = ft_strdup(path);
-	new->name = ft_strdup((const char*)dir->d_name);
+	new->name = ft_strdup(name);
 	new->sub = NULL;
 	new->next = NULL;
 	return (new);
@@ -64,6 +63,16 @@ void			reader(t_reader *current, t_reader	*head)
 	time = ctime(&current->sb.st_mtime);
 	time = ft_strsub(time, 0, _LEN(time) - 1);
 	if (current->name){
+		print_right(current->sb.st_mode);
+		PUT(" ");
+		ft_putnbr(current->sb.st_nlink);
+		PUT(" ");
+		ft_putstr((getpwuid(current->sb.st_uid))->pw_name);
+		ft_putchar(' ');
+		ft_putstr((getgrgid(current->sb.st_gid))->gr_name);
+		ft_putchar(' ');
+		ft_putnbr(current->sb.st_size);
+		ft_putchar('\t');
 		PUT(time);
 		PUT(" ");
 		CYAN(current->name);
@@ -95,6 +104,43 @@ t_reader				*lst_append(t_reader **head, t_reader *last)
 	return (last);
 }
 
+char				*is_slashy(char *path)
+{
+	int				i;
+	char			*new;
+	int				count;
+
+	i = 0;
+	count = 0;
+	while (path[i])
+	{
+		if (path[i] == '/')
+		{
+			count += 1;
+			while (path[i] && path[i] == '/')
+				i++;
+		}
+		count++;
+		i++;
+	}
+	if (!(new = malloc(sizeof(char*) * (count + 1))))
+		return (NULL);
+	i = 0;
+	while (path[i])
+	{
+		if (path[i] == '/')
+		{
+			new[i] = path[i];
+			while (path[i] && path[i] == '/')
+				i++;
+		}
+		new[i] = path[i];
+		i++;
+	}
+	new[i] = '\0';
+	return (new);
+}
+
 t_reader			*read_directory(DIR *directory, char *path)
 {
 	t_reader		*tmp;
@@ -116,7 +162,7 @@ t_reader			*read_directory(DIR *directory, char *path)
 		}
 		else
 		{
-			tmp = lst_append(&head, create(sb, dir, path));
+			tmp = lst_append(&head, create(sb, (char*)dir->d_name, new_path));
 			if (IS_DIR(sb, dir)){
 				if (!(sub = opendir(new_path)))
 					PR(dir->d_name, "SHIT here we go encore\n");
@@ -146,7 +192,8 @@ t_reader			*open_directory(t_ls meta)
 			PR(meta.array[i], _UNKNOW);
 		if (stat(meta.array[i], &sb))
 			PR(meta.array[i], _UNKNOW);
-		new = lst_append(&head, read_directory(buff, meta.array[i]));
+		new = lst_append(&head, create(sb, meta.array[i], meta.array[i]));
+		new = lst_append(&new->sub, read_directory(buff, meta.array[i]));
 		i += 1;
 	}
 	return (head);
@@ -182,7 +229,7 @@ void			swap_data(t_reader **a, t_reader **b)
 
 int				cmp_name(t_reader *a, t_reader *b)
 {
-	return (ft_strcmp(a->dir->d_name, b->dir->d_name));
+	return (ft_strcmp(a->name, b->name));
 }
 
 int				cmp_time(t_reader *a, t_reader *b)
@@ -205,16 +252,20 @@ void			sort_map(t_reader **file, int (*f)(t_reader *, t_reader *))
 	{
 		swaped = 0;
 		current = head->next;
+		if (head->sub)
+		{
+			sort_map(&head->sub, &cmp_name);
+		}
 		while (current && !swaped)
 		{
-			if ((*f)(head, current) < 0)
+			if ((*f)(head, current) > 0)
 			{
 				swap_data(&head, &current);
 				swaped = 1;
 			}
 			current = current->next;
 		}
-		if (!swaped || !current)
+		if (!current && !swaped)
 			head = head->next;
 	}
 }

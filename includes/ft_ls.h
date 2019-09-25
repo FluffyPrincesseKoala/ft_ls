@@ -86,11 +86,11 @@ t_reader	*open_directory(t_ls meta);
 t_reader	*read_directory(DIR *directory, char *path);
 void		reader(t_reader *current, t_reader *head);
 void		reader_sub(t_reader *current, t_reader *head);
-t_reader    *create(struct stat	sb, struct dirent *dir, char *path);
+t_reader    *create(struct stat	sb, char *name, char *path);
 t_reader    *lst_append(t_reader **head, t_reader *last);
 void		sort_map(t_reader **file, int (*f)(t_reader *, t_reader *));
 int			cmp_name(t_reader *a, t_reader *b);
 int			cmp_time(t_reader *a, t_reader *b);
-// void   		free_reader(t_reader **lst);
+void		print_right(mode_t	st_mode);
 
 #endif

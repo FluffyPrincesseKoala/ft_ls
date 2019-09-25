@@ -189,16 +189,16 @@ char		*print_type(mode_t m)
 
 void		print_right(mode_t	st_mode)
 {
-	ft_putstr((S_ISDIR(st_mode)) ? "d" : "-");
+	ft_putstr(print_type(st_mode));
     ft_putstr((st_mode & S_IRUSR) ? "r" : "-");
     ft_putstr((st_mode & S_IWUSR) ? "w" : "-");
-    ft_putstr((st_mode & S_IXUSR) ? "x" : "-");
+    ft_putstr((st_mode & S_ISUID) ? "s" : (st_mode & S_IXUSR) ? "x" : "-");
     ft_putstr((st_mode & S_IRGRP) ? "r" : "-");
     ft_putstr((st_mode & S_IWGRP) ? "w" : "-");
-    ft_putstr((st_mode & S_IXGRP) ? "x" : "-");
+    ft_putstr((st_mode & S_ISGID) ? "s" : (st_mode & S_IXGRP) ? "x" : "-");
     ft_putstr((st_mode & S_IROTH) ? "r" : "-");
     ft_putstr((st_mode & S_IWOTH) ? "w" : "-");
-    ft_putstr((st_mode & S_IXOTH) ? "x" : "-");
+    ft_putstr((st_mode & S_ISVTX) ? "t" : (st_mode & S_IXOTH) ? "x" : "-");
 	ft_putchar(' ');
 }
 
@@ -222,26 +222,67 @@ void		print_stat(t_reader *file)
 	ft_putendl(file->dir->d_name);
 }
 
+void				dsy(t_ls meta)
+{
+	t_reader		*cur;
+	t_reader		*sub;
+	t_reader		*ssub;
+
+	cur = meta.file;
+	while (cur)
+	{
+		PUT("\t");
+		PUT(cur->name);
+		PUT("\n");
+		if (cur->sub)
+		{
+			sub = cur->sub;
+			while (sub)
+			{
+				PUT("\t\t");
+				PUT(sub->name);
+				PUT("\n");
+				if (sub->sub)
+				{
+					ssub = sub->sub;
+					while (ssub)
+					{
+						PUT("\t\t\t");
+						PUT(ssub->name);
+						PUT("\n");
+						ssub = ssub->next;
+					}
+				}
+				sub = sub->next;
+			}
+		}
+		cur = cur->next;
+	}
+}
+
 int					main(int ac, char **av)
 {
 	t_ls			meta;
 
 	meta = set_arg(init_arg(), av);
+	if (meta.array == NULL)
+		meta.array = create_array(".");
 	print_arg(meta);
 
 	meta.file = open_directory(meta);
 
-	GREEN("BEFOR_SORTING\n");
+	// dsy(meta);
+	RED("BEFOR_SORTING\n");
 	RESET();
-	_READ(meta.file);
+	reader_sub(meta.file, meta.file);
 	
-	GREEN("AFTER_SORTING_BY_NAME\n");
+	RED("AFTER_SORTING_BY_NAME\n");
 	RESET();
 	sort_map(&meta.file, &cmp_name);
-	_READ(meta.file);
+	reader_sub(meta.file, meta.file);
 
-	GREEN("AFTER_SORTING_BY_TIME\n");
-	RESET();
-	sort_map(&meta.file, &cmp_time);
-	_READ(meta.file);
+	// RED("AFTER_SORTING_BY_TIME\n");
+	// RESET();
+	// sort_map(&meta.file, &cmp_time);
+	// reader_sub(meta.file, meta.file);
 }

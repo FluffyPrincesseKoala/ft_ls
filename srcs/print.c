@@ -56,8 +56,8 @@ void    print_l(t_reader *current)
 
 	time = ctime(&current->sb.st_mtime);
 	time = ft_strsub(time, 0, _LEN(time) - 1);
-	printf();
-    /*
+	//printf();
+
     print_right(current->sb.st_mode);
 	PUT(" ");
 	ft_putnbr(current->sb.st_nlink);
@@ -71,7 +71,10 @@ void    print_l(t_reader *current)
 	PUT(time);
 	PUT(" ");
 	CYAN(current->name);
+	if (S_ISLNK(current->sb.st_mode))
+	{
+		PUT("\t->\t");
+	}
 	PUT("\n");
 	RESET();
-    */
 }

@@ -45,6 +45,11 @@ t_reader        *create(struct stat	sb, char *name, char *path)
 
 void			reader_sub(t_reader *current, t_reader	*head)
 {
+	if (current && !current->sub)
+	{
+		print_l(current);
+		PUT("\n");
+	}
 	if (current->sub)
 	{
 		GREEN(current->path);
@@ -53,14 +58,19 @@ void			reader_sub(t_reader *current, t_reader	*head)
 		reader(current->sub, current->sub);
 	}
 	if (current->next)
+	{
 		reader_sub(current->next, head);
+	}
 }
 
 void			reader(t_reader *current, t_reader	*head)
 {
-	print_l(current);
+
 	if (current->next)
+	{
+		print_l(current);
 		reader(current->next, head);
+	}
 	else
 	{
 		reader_sub(current, head);
@@ -97,7 +107,7 @@ t_reader			*read_directory(DIR *directory, char *path)
 	while (directory && (dir = readdir(directory)))
 	{
 		new_path = ft_strjoin(path, ft_strjoin("/", dir->d_name));
-		if (stat(new_path, &sb))
+		if (lstat(new_path, &sb))
 		{
 			PR(dir->d_name, "permission pas tres autorized\n");
 			if (errno == ENOENT)
@@ -133,7 +143,7 @@ t_reader			*open_directory(t_ls meta)
 	{
 		if (!(buff = opendir(meta.array[i])))
 			PR(meta.array[i], _UNKNOW);
-		if (stat(meta.array[i], &sb))
+		if (lstat(meta.array[i], &sb))
 			PR(meta.array[i], _UNKNOW);
 		new = lst_append(&head, create(sb, meta.array[i], meta.array[i]));
 		new = lst_append(&new->sub, read_directory(buff, meta.array[i]));

@@ -92,5 +92,6 @@ void		sort_map(t_reader **file, int (*f)(t_reader *, t_reader *));
 int			cmp_name(t_reader *a, t_reader *b);
 int			cmp_time(t_reader *a, t_reader *b);
 void		print_right(mode_t	st_mode);
+void 		print_l(t_reader *current);
 
 #endif

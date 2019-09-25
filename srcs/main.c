@@ -165,63 +165,6 @@ void		print_arg(t_ls meta)
 	ft_putchar('\n');
 }
 
-/*
-**	https://en.wikipedia.org/wiki/Unix_file_types#FIFO_(named_pipe)
-**	http://manpagesfr.free.fr/man/man2/stat.2.html
-*/
-char		*print_type(mode_t m)
-{
-	if (S_ISDIR(m))
-		return ("d");
-	else if (S_ISCHR(m))
-		return ("c");
-	else if (S_ISBLK(m))
-		return ("b");
-	else if (S_ISFIFO(m))
-		return ("p");
-	else if (S_ISLNK(m))
-		return ("l");
-	else if (S_ISSOCK(m))
-		return ("s");
-	else
-		return ("-");	
-}
-
-void		print_right(mode_t	st_mode)
-{
-	ft_putstr(print_type(st_mode));
-    ft_putstr((st_mode & S_IRUSR) ? "r" : "-");
-    ft_putstr((st_mode & S_IWUSR) ? "w" : "-");
-    ft_putstr((st_mode & S_ISUID) ? "s" : (st_mode & S_IXUSR) ? "x" : "-");
-    ft_putstr((st_mode & S_IRGRP) ? "r" : "-");
-    ft_putstr((st_mode & S_IWGRP) ? "w" : "-");
-    ft_putstr((st_mode & S_ISGID) ? "s" : (st_mode & S_IXGRP) ? "x" : "-");
-    ft_putstr((st_mode & S_IROTH) ? "r" : "-");
-    ft_putstr((st_mode & S_IWOTH) ? "w" : "-");
-    ft_putstr((st_mode & S_ISVTX) ? "t" : (st_mode & S_IXOTH) ? "x" : "-");
-	ft_putchar(' ');
-}
-
-void		print_stat(t_reader *file)
-{
-	char	*time;
-
-	time = ctime(&file->sb.st_mtime);
-	time = ft_strsub(time, 0, _LEN(time) - 1);
-	print_right(file->sb.st_mode);
-	ft_putnbr(file->sb.st_nlink);
-	ft_putchar(' ');
-	ft_putstr((getpwuid(file->sb.st_uid))->pw_name);
-	ft_putchar(' ');
-	ft_putstr((getgrgid(file->sb.st_gid))->gr_name);
-	ft_putchar(' ');
-	ft_putnbr(file->sb.st_size);
-	ft_putchar(' ');
-	ft_putstr(time);
-	ft_putchar(' ');
-	ft_putendl(file->dir->d_name);
-}
-
 void				dsy(t_ls meta)
 {
 	t_reader		*cur;

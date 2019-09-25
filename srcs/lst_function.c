@@ -58,32 +58,12 @@ void			reader_sub(t_reader *current, t_reader	*head)
 
 void			reader(t_reader *current, t_reader	*head)
 {
-	char	*time;
-
-	time = ctime(&current->sb.st_mtime);
-	time = ft_strsub(time, 0, _LEN(time) - 1);
-	if (current->name){
-		print_right(current->sb.st_mode);
-		PUT(" ");
-		ft_putnbr(current->sb.st_nlink);
-		PUT(" ");
-		ft_putstr((getpwuid(current->sb.st_uid))->pw_name);
-		ft_putchar(' ');
-		ft_putstr((getgrgid(current->sb.st_gid))->gr_name);
-		ft_putchar(' ');
-		ft_putnbr(current->sb.st_size);
-		ft_putchar('\t');
-		PUT(time);
-		PUT(" ");
-		CYAN(current->name);
-		PUT("\n");
-		RESET();
-	}
+	print_l(current);
 	if (current->next)
 		reader(current->next, head);
 	else
 	{
-		reader_sub(head, head);
+		reader_sub(current, head);
 	}
 	
 }
@@ -102,43 +82,6 @@ t_reader				*lst_append(t_reader **head, t_reader *last)
 		tmp->next = last;
 	}
 	return (last);
-}
-
-char				*is_slashy(char *path)
-{
-	int				i;
-	char			*new;
-	int				count;
-
-	i = 0;
-	count = 0;
-	while (path[i])
-	{
-		if (path[i] == '/')
-		{
-			count += 1;
-			while (path[i] && path[i] == '/')
-				i++;
-		}
-		count++;
-		i++;
-	}
-	if (!(new = malloc(sizeof(char*) * (count + 1))))
-		return (NULL);
-	i = 0;
-	while (path[i])
-	{
-		if (path[i] == '/')
-		{
-			new[i] = path[i];
-			while (path[i] && path[i] == '/')
-				i++;
-		}
-		new[i] = path[i];
-		i++;
-	}
-	new[i] = '\0';
-	return (new);
 }
 
 t_reader			*read_directory(DIR *directory, char *path)

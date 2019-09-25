@@ -23,6 +23,7 @@ RM		=		rm -rf
 SRC		=		srcs/main.c 		\
 				srcs/array.c		\
 				srcs/lst_function.c \
+				srcs/print.c 		\
 
 LIBFT	=		libft/libft.a
 

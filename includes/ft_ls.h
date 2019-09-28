@@ -84,8 +84,8 @@ int			array_len(char **array);
 void		free_array(char **array);
 t_reader	*open_directory(t_ls meta);
 t_reader	*read_directory(DIR *directory, char *path);
-void		reader(t_reader *current, t_reader *head);
-void		reader_sub(t_reader *current, t_reader *head);
+void		reader(t_reader *head, t_reader *current, int root);
+void		reader_sub(t_reader *current);
 t_reader    *create(struct stat	sb, char *name, char *path);
 t_reader    *lst_append(t_reader **head, t_reader *last);
 void		sort_map(t_reader **file, int (*f)(t_reader *, t_reader *));
@@ -93,5 +93,6 @@ int			cmp_name(t_reader *a, t_reader *b);
 int			cmp_time(t_reader *a, t_reader *b);
 void		print_right(mode_t	st_mode);
 void 		print_l(t_reader *current);
+int			get_total(t_reader *current);
 
 #endif

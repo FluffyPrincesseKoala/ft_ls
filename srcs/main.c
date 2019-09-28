@@ -215,14 +215,14 @@ int					main(int ac, char **av)
 	meta.file = open_directory(meta);
 
 	// dsy(meta);
-	RED("BEFOR_SORTING\n");
-	RESET();
-	reader_sub(meta.file, meta.file);
+	// RED("BEFOR_SORTING\n");
+	// RESET();
+	// reader_sub(meta.file);
 	
 	RED("AFTER_SORTING_BY_NAME\n");
 	RESET();
 	sort_map(&meta.file, &cmp_name);
-	reader_sub(meta.file, meta.file);
+	reader(meta.file, meta.file, 1);
 
 	// RED("AFTER_SORTING_BY_TIME\n");
 	// RESET();

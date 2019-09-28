@@ -53,10 +53,8 @@ void		print_right(mode_t	st_mode)
 void    print_l(t_reader *current)
 {
     char	*time;
-
 	time = ctime(&current->sb.st_mtime);
 	time = ft_strsub(time, 0, _LEN(time) - 1);
-	//printf();
 
     print_right(current->sb.st_mode);
 	PUT(" ");
@@ -73,8 +71,35 @@ void    print_l(t_reader *current)
 	CYAN(current->name);
 	if (S_ISLNK(current->sb.st_mode))
 	{
-		PUT("\t->\t");
+		char linkname[PATH_MAX];
+		ssize_t r = readlink(current->name, linkname, PATH_MAX);
+		if (r != -1)
+		{
+			linkname[r] = '\0';
+			PUT(" -> ");
+			PUT(linkname);
+		}
 	}
 	PUT("\n");
 	RESET();
 }
+
+int			get_total(t_reader *current)
+{
+	if (current->next)
+		return ((current->sb.st_blocks/2) + get_total(current->next));
+	return (current->sb.st_blocks/2);
+}
+
+// int		get_total(t_reader *current)
+// {
+// 	printf("\n[%s]\t->\t%d", current->name, current->sb.st_blocks/2);
+// 	if (current->sub)
+// 		return (get_total(current->sub));
+// 	if (current->next)
+// 		return ((current->sb.st_blocks/2) + get_total(current->next));
+// 	if (current)
+// 		return (current->sb.st_blocks/2);
+// 	return (0);
+// }
+

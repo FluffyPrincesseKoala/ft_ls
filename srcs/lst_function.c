@@ -43,40 +43,66 @@ t_reader        *create(struct stat	sb, char *name, char *path)
 	return (new);
 }
 
-void			reader_sub(t_reader *current, t_reader	*head)
+void			reader_sub(t_reader *current)
 {
-	if (current && !current->sub)
-	{
-		print_l(current);
-		PUT("\n");
-	}
 	if (current->sub)
 	{
 		GREEN(current->path);
-		PUT(":\n");		
+		PUT(":\ntotal ");		
 		RESET();
-		reader(current->sub, current->sub);
+		PN(get_total(current->sub));
+		PUT("\n");
+		reader(current->sub, current->sub, 0);
 	}
 	if (current->next)
 	{
-		reader_sub(current->next, head);
-	}
+		reader_sub(current->next);
+	}	
 }
 
-void			reader(t_reader *current, t_reader	*head)
+void			reader(t_reader *head, t_reader *current, int root)
 {
-
-	if (current->next)
-	{
+	if (!(root && current->sub))
 		print_l(current);
-		reader(current->next, head);
-	}
+	if (current->next)
+		reader(head, current->next, root);
 	else
-	{
-		reader_sub(current, head);
-	}
-	
+		reader_sub(head);
 }
+
+// void			reader_sub(t_reader *current)
+// {
+// 	if (current && !current->sub)
+// 		print_l(current);
+// 	if (current->sub)
+// 	{
+// 		GREEN(current->path);
+// 		PUT(":\ntotal ");		
+// 		RESET();
+// 		PN(get_total(current->sub));
+// 		PUT("\n");
+// 		reader(current->sub);
+// 	}
+// 	if (current->next)
+// 	{
+// 		reader_sub(current->next);
+// 	}	
+// }
+
+// void			reader(t_reader *current)
+// {
+
+// 	print_l(current);
+// 	if (current->next)
+// 	{
+// 		reader(current->next);
+// 	}
+// 	if (current->sub)
+// 	{
+// 		reader_sub(current);
+// 	}
+	
+// }
 
 t_reader				*lst_append(t_reader **head, t_reader *last)
 {
@@ -116,7 +142,8 @@ t_reader			*read_directory(DIR *directory, char *path)
 		else
 		{
 			tmp = lst_append(&head, create(sb, (char*)dir->d_name, new_path));
-			if (IS_DIR(sb, dir)){
+			if (IS_DIR(sb, dir))
+			{
 				if (!(sub = opendir(new_path)))
 					PR(dir->d_name, "SHIT here we go encore\n");
 				tmp->sub = read_directory(sub, new_path);

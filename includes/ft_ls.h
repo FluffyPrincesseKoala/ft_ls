@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_ls.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: princesse <princesse@student.42.fr>        +#+  +:+       +#+        */
+/*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/30 15:24:04 by cylemair          #+#    #+#             */
-/*   Updated: 2019/09/19 21:15:39 by princesse        ###   ########.fr       */
+/*   Updated: 2019/10/02 22:33:30 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 # include <time.h>
 # include <stdio.h>
 # include <unistd.h>
-#include <errno.h>
+# include <errno.h>
 
 # define _LEN(STR)		ft_strlen(STR)
 # define A_LEN(ARRAY)	array_len(ARRAY)
@@ -52,6 +52,7 @@
 						ft_putstr_fd(NAME, 2);		\
 						ft_putstr_fd(": ", 2);		\
 						ft_putstr_fd(E, 2);			\
+						ft_putstr_fd("\n", 2);		\
 						RESET();
 
 typedef struct		s_opt
@@ -69,6 +70,7 @@ typedef struct		s_reader
 	struct dirent	*dir;
 	char			*name;
 	char			*path;
+	int				last;
 	struct s_reader	*next;
 	struct s_reader	*sub;
 }					t_reader;
@@ -80,19 +82,34 @@ typedef struct		s_ls
 	char			**array;
 }					t_ls;
 
-int			array_len(char **array);
-void		free_array(char **array);
 t_reader	*open_directory(t_ls meta);
 t_reader	*read_directory(DIR *directory, char *path);
-void		reader(t_reader *head, t_reader *current, int root);
-void		reader_sub(t_reader *current);
 t_reader    *create(struct stat	sb, char *name, char *path);
 t_reader    *lst_append(t_reader **head, t_reader *last);
+
+int			array_len(char **array);
+void		free_array(char **array);
+
+void		reader(t_ls meta, t_reader *head, t_reader *current, int root);
+void		reader_sub(t_ls meta, t_reader *current, int root);
+
 void		sort_map(t_reader **file, int (*f)(t_reader *, t_reader *));
 int			cmp_name(t_reader *a, t_reader *b);
 int			cmp_time(t_reader *a, t_reader *b);
+int			rcmp_name(t_reader *a, t_reader *b);
+int			rcmp_time(t_reader *a, t_reader *b);
+
+void		print_basic(t_ls meta, t_reader *current, int root);
 void		print_right(mode_t	st_mode);
-void 		print_l(t_reader *current);
+void 		print_l(t_ls meta, t_reader *current);
 int			get_total(t_reader *current);
 
+int			strlen_rdelim(const char *str, int c);
+int			is_next_dir(t_reader *current);
+char		*ft_strndup(const char *str, int len);
+
 #endif
+
+/*
+** ACL implémentation https://unix.stackexchange.com/questions/347836/view-extended-acl-for-a-file-with-in-ls-l-output
+*/

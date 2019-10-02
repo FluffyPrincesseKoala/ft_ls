@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/ft_ls",
-            "args": ["srcs", "includes"],
+            "args": ["srcs", "includes", "Makefile", "toto"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
@@ -22,18 +22,6 @@
                     "ignoreFailures": true
                 }
             ]
-        },
-        {
-            "name": "(gdb) Launch",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/ft_ls",
-            "args": ["srcs", "includes"],
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
-            "environment": [],
-            "externalConsole": true,
-            "MIMode": "lldb"
         }
     ]
 }

@@ -3,31 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   lst_function.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: princesse <princesse@student.42.fr>        +#+  +:+       +#+        */
+/*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/30 22:08:06 by princesse         #+#    #+#             */
-/*   Updated: 2019/09/16 03:42:14 by princesse        ###   ########.fr       */
+/*   Updated: 2019/10/02 22:37:05 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 # include "../includes/ft_ls.h"
-
-//void    free_dirent(t_dirent **dir))
-
-// void    free_reader(t_reader **lst)
-// {
-// 	if ((*lst)->next)
-// 		free_reader(&((*lst)->next));
-// 	if ((*lst)->sub)
-// 		free_reader(&((*lst)->sub));
-// 	if ((*lst)->dir)
-// 		free_reader(&((*lst)->dir));
-// 	ft_memset(*lst, 0, sizeof(t_reader));
-// 	free(*lst);
-// //    lst = NULL;
-// //    free(lst)
-// }
 
 t_reader        *create(struct stat	sb, char *name, char *path)
 {
@@ -38,71 +22,78 @@ t_reader        *create(struct stat	sb, char *name, char *path)
 	new->sb = sb;
 	new->path = ft_strdup(path);
 	new->name = ft_strdup(name);
+	new->last = 0;
 	new->sub = NULL;
 	new->next = NULL;
 	return (new);
 }
 
-void			reader_sub(t_reader *current)
+int				is_full(t_reader *current)
+{
+	int			check;
+
+	check = 0;
+	if (current)
+	{
+		check += is_full(current->next);
+		if (ft_strcmp(current->name, ".") && ft_strcmp(current->name, ".."))
+			return (1);
+	}
+	return (check);
+}
+
+int				is_next_dir(t_reader *current)
+{
+	t_reader	*tmp;
+
+	tmp = current->next;
+	if (tmp && tmp->sub)
+		return (1);
+	return (0);
+}
+
+void			reader_sub(t_ls meta, t_reader *current, int root)
 {
 	if (current->sub)
 	{
-		GREEN(current->path);
-		PUT(":\ntotal ");		
-		RESET();
-		PN(get_total(current->sub));
-		PUT("\n");
-		reader(current->sub, current->sub, 0);
+		if (((array_len(meta.array) > 1 && root) || meta.arg._R) && (is_full(current->sub) || meta.arg._a))
+		{
+			GREEN(current->path);
+			PUT(":\n");
+			RESET();
+		}
+		if (meta.arg._l && (root || meta.arg._R))
+		{
+			PUT("total ");		
+			PN(get_total(current->sub));
+			PUT("\n");
+		}
+		if (root || meta.arg._R)
+		{
+			reader(meta, current->sub, current->sub, 0);
+		}
+	}
+	if (current->next)
+		reader_sub(meta, current->next, root);
+}
+
+void			reader(t_ls meta, t_reader *head, t_reader *current, int root)
+{
+	if (!(root && current->sub))
+	{
+		(meta.arg._l) ? print_l(meta, current) : print_basic(meta, current, root);
 	}
 	if (current->next)
 	{
-		reader_sub(current->next);
-	}	
-}
-
-void			reader(t_reader *head, t_reader *current, int root)
-{
-	if (!(root && current->sub))
-		print_l(current);
-	if (current->next)
-		reader(head, current->next, root);
+		reader(meta, head, current->next, root);
+	}
 	else
-		reader_sub(head);
+	{
+		reader_sub(meta, head, root);
+	}
+	if (!current->next && !current->sub && !is_next_dir(current))
+		PUT("\n");
 }
-
-// void			reader_sub(t_reader *current)
-// {
-// 	if (current && !current->sub)
-// 		print_l(current);
-// 	if (current->sub)
-// 	{
-// 		GREEN(current->path);
-// 		PUT(":\ntotal ");		
-// 		RESET();
-// 		PN(get_total(current->sub));
-// 		PUT("\n");
-// 		reader(current->sub);
-// 	}
-// 	if (current->next)
-// 	{
-// 		reader_sub(current->next);
-// 	}	
-// }
-
-// void			reader(t_reader *current)
-// {
-
-// 	print_l(current);
-// 	if (current->next)
-// 	{
-// 		reader(current->next);
-// 	}
-// 	if (current->sub)
-// 	{
-// 		reader_sub(current);
-// 	}
-	
-// }
 
 t_reader				*lst_append(t_reader **head, t_reader *last)
 {
@@ -151,6 +142,8 @@ t_reader			*read_directory(DIR *directory, char *path)
 		}
 		ft_strdel(&new_path);
 	}
+	printf("_____last ? %s\n", tmp->name);
+	tmp->last = 1;
 	closedir(directory);
 	return (head);
 }
@@ -177,75 +170,4 @@ t_reader			*open_directory(t_ls meta)
 		i += 1;
 	}
 	return (head);
-}
-// sorting
-
-void			swap_data(t_reader **a, t_reader **b)
-{
-	struct s_reader	*c;
-	struct dirent	*dir;
-	struct stat		sb;
-	char			*path;
-	char			*name;
-
-	c = ((*a)->sub);
-	dir = ((*a)->dir);
-	sb = ((*a)->sb);
-	path = ((*a)->path);
-	name = ((*a)->name);
-	
-	((*a)->sub) = ((*b)->sub);
-	((*a)->dir) = ((*b)->dir);
-	((*a)->sb) = ((*b)->sb);
-	((*a)->path) = ((*b)->path);
-	((*a)->name) = ((*b)->name);
-
-	((*b)->sub) = c;
-	((*b)->dir) = dir;
-	((*b)->sb) = sb;
-	((*b)->path) = path;
-	((*b)->name) = name;
-}
-
-int				cmp_name(t_reader *a, t_reader *b)
-{
-	return (ft_strcmp(a->name, b->name));
-}
-
-int				cmp_time(t_reader *a, t_reader *b)
-{
-	if ((int)a->sb.st_mtime > (int)b->sb.st_mtime)
-		return (1);
-	if ((int)a->sb.st_mtime == (int)b->sb.st_mtime)
-		return (cmp_name(a, b));
-	return (-1);
-}
-
-void			sort_map(t_reader **file, int (*f)(t_reader *, t_reader *))
-{
-	t_reader	*head;
-	t_reader	*current;
-	int			swaped;
-
-	head = *file;
-	while (head)
-	{
-		swaped = 0;
-		current = head->next;
-		if (head->sub)
-		{
-			sort_map(&head->sub, &cmp_name);
-		}
-		while (current && !swaped)
-		{
-			if ((*f)(head, current) > 0)
-			{
-				swap_data(&head, &current);
-				swaped = 1;
-			}
-			current = current->next;
-		}
-		if (!current && !swaped)
-			head = head->next;
-	}
 }

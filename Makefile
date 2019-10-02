@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: princesse <princesse@student.42.fr>        +#+  +:+       +#+         #
+#    By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/02/01 15:17:18 by cylemair          #+#    #+#              #
-#    Updated: 2019/09/10 16:46:30 by princesse        ###   ########.fr        #
+#    Updated: 2019/10/02 20:03:32 by cylemair         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,7 @@ SRC		=		srcs/main.c 		\
 				srcs/array.c		\
 				srcs/lst_function.c \
 				srcs/print.c 		\
+				srcs/sorting.c 		\
 
 LIBFT	=		libft/libft.a
 

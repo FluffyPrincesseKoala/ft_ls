@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   print.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: princesse <princesse@student.42.fr>        +#+  +:+       +#+        */
+/*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/10 21:36:12 by princesse         #+#    #+#             */
-/*   Updated: 2019/09/10 21:37:56 by princesse        ###   ########.fr       */
+/*   Updated: 2019/10/02 22:49:52 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,32 @@ void		print_right(mode_t	st_mode)
 	ft_putchar(' ');
 }
 
-void    print_l(t_reader *current)
+void	print_basic(t_ls meta, t_reader *current, int root)
+{
+	if (!meta.arg._a && (!ft_strcmp(current->name, ".")	|| !ft_strcmp(current->name, "..") || (current->name[0] == '.' )))
+		return;
+	PUT(current->name);
+	// PUT((current->next && !(root && is_next_dir(current))) ? "\t"
+	// 		: (!is_next_dir(current) || (is_next_dir(current) && meta.arg._R)) ? "\n"
+	// 		: (meta.arg._R) ? "\n" : "\0");
+	if (current->next && !(root && is_next_dir(current)))
+		ft_putchar('\t');
+	else if (!current->last || meta.arg._R)
+		ft_putstr("\n\n");
+	else
+		ft_putchar('\n');
+}
+
+void    print_l(t_ls meta, t_reader *current)
 {
     char	*time;
 	time = ctime(&current->sb.st_mtime);
 	time = ft_strsub(time, 0, _LEN(time) - 1);
 
-    print_right(current->sb.st_mode);
+	if (!meta.arg._a && (!ft_strcmp(current->name, ".")
+		|| !ft_strcmp(current->name, "..")))
+		return;
+	print_right(current->sb.st_mode);
 	PUT(" ");
 	ft_putnbr(current->sb.st_nlink);
 	PUT(" ");
@@ -90,16 +109,3 @@ int			get_total(t_reader *current)
 		return ((current->sb.st_blocks/2) + get_total(current->next));
 	return (current->sb.st_blocks/2);
 }
-
-// int		get_total(t_reader *current)
-// {
-// 	printf("\n[%s]\t->\t%d", current->name, current->sb.st_blocks/2);
-// 	if (current->sub)
-// 		return (get_total(current->sub));
-// 	if (current->next)
-// 		return ((current->sb.st_blocks/2) + get_total(current->next));
-// 	if (current)
-// 		return (current->sb.st_blocks/2);
-// 	return (0);
-// }
-

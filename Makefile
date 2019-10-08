@@ -6,7 +6,7 @@
 #    By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/02/01 15:17:18 by cylemair          #+#    #+#              #
-#    Updated: 2019/10/02 20:03:32 by cylemair         ###   ########.fr        #
+#    Updated: 2019/10/08 21:37:43 by cylemair         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,6 +25,7 @@ SRC		=		srcs/main.c 		\
 				srcs/lst_function.c \
 				srcs/print.c 		\
 				srcs/sorting.c 		\
+				srcs/error.c 		\
 
 LIBFT	=		libft/libft.a
 

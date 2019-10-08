@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/15 15:13:59 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/02 20:12:48 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/09 00:03:02 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,23 +56,6 @@ t_opt		read_arg(t_opt arg, char c)
 	return (arg);
 }
 
-char		**create_array(char *str)
-{
-	char	**new;
-	int		len;
-	int		new_len;
-
-	if (!str || !(new = malloc(sizeof(char*) * 2)))
-		return (NULL);
-	if ((len = ft_strlen(str) - 1) == (new_len = strlen_rdelim(str, '/'))
-		&& len >= 1)
-		new[0] = ft_strndup(str, new_len);
-	else
-		new[0] = ft_strdup(str);
-	new[1] = NULL;
-	return (new);
-}
-
 char		*ft_strndup(const char *str, int len)
 {
 	char	*new;
@@ -87,35 +70,6 @@ char		*ft_strndup(const char *str, int len)
 		i++;
 	}
 	new[i] = '\0';
-	return (new);
-}
-
-char		**array_add(char** array, char *add)
-{
-	char	**new;
-	char	i;
-	int		len;
-	int		new_len;
-
-	i = array_len(array);
-	if (!i || !(new = malloc(sizeof(char*) * (i + 2))))
-		return ((array) ? array : NULL);
-	i = 0;
-	while (array[i])
-	{
-		if ((len = ft_strlen(array[i]) - 1) == (new_len = strlen_rdelim(array[i], '/'))
-			&& len >= 1)
-			new[i] = ft_strndup(array[i], new_len);
-		new[i] = ft_strdup(array[i]);
-		i++;
-	}
-	if ((len = ft_strlen(add) - 1) == (new_len = strlen_rdelim(add, '/'))
-		&& len >= 1)
-		new[i] = ft_strndup(add, new_len);
-	else
-		new[i] = ft_strdup(add);
-	new[++i] = NULL;
-	ft_memdel((void**)array);
 	return (new);
 }
 
@@ -135,9 +89,7 @@ t_ls		set_arg(t_ls new, char **av)
 		x = 0;
 		is_opt = 0;
 		if ((is_path = (av[y][x] != '-') ? 1 : is_path))
-		{
 			new.array = (!new.array) ? create_array(av[y]) : array_add(new.array, av[y]);
-		}		
 		while (av[y][x] && !is_path)
 		{
 			is_opt = (av[y][x] == '-') ? 1 : is_opt;
@@ -165,6 +117,7 @@ t_ls		init_arg()
 	new.arg._r = 0;
 	new.arg._t = 0;
 	new.file = NULL;
+	new._err = NULL;
 	new.array = NULL;
 	return (new);
 }
@@ -252,7 +205,7 @@ int					strlen_rdelim(const char *str, int c)
 	return (i);
 }
 
-char				**check_last(char **array)
+char				**check_last(char **array) // useless
 {
 	char			**new;
 	int				i;
@@ -263,7 +216,7 @@ char				**check_last(char **array)
 	if (!(new = malloc(sizeof(char) * array_len(array))))
 		return (NULL);
 	while (array && array[i])
-	{		
+	{
 		if ((len = ft_strlen(array[i]) - 1) == (new_len = strlen_rdelim(array[i], '/'))
 			&& len >= 1)
 			new[i] = ft_strndup(array[i], new_len);
@@ -285,22 +238,13 @@ int					main(int ac, char **av)
 	meta = set_arg(init_arg(), av);
 	if (meta.array == NULL)
 		meta.array = create_array(".");
-	// else
-	// 	meta.array = check_last(meta.array);
-	print_arg(meta);
+	meta.file = open_directory(&meta);
 
-	meta.file = open_directory(meta);
-
-	// // dsy(meta);
-	// // RED("BEFOR_SORTING\n");
-	// // RESET();
-	// // reader_sub(meta.file);
-	PUT("\n\n");
-	RED("AFTER_SORTING_BY_NAME\n_____________________\n");
-	RESET();
-
-//	choose sorting
-
+	if (array_len(meta._err) > 0 && array_len(meta._err) == array_len(meta.array))
+	{
+		output_error((char const **)meta._err);
+		exit(errno);
+	}
 	if (meta.arg._r)
 	{
 		if (meta.arg._t)
@@ -316,10 +260,5 @@ int					main(int ac, char **av)
 			sort_map(&meta.file, &cmp_name);
 	}
 	reader(meta, meta.file, meta.file, 1);
-	// if (!meta.arg._l)
-	// 	ft_putchar('\n');
-	// RED("AFTER_SORTING_BY_TIME\n");
-	// RESET();
-	// sort_map(&meta.file, &cmp_time);
-	// reader_sub(meta.file, meta.file);
+	output_error((char const **)meta._err);
 }

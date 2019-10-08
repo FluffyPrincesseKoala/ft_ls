@@ -6,12 +6,12 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/30 22:08:06 by princesse         #+#    #+#             */
-/*   Updated: 2019/10/02 22:37:05 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/08 23:53:47 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
-# include "../includes/ft_ls.h"
+#include "../includes/ft_ls.h"
 
 t_reader        *create(struct stat	sb, char *name, char *path)
 {
@@ -56,7 +56,8 @@ void			reader_sub(t_ls meta, t_reader *current, int root)
 {
 	if (current->sub)
 	{
-		if (((array_len(meta.array) > 1 && root) || meta.arg._R) && (is_full(current->sub) || meta.arg._a))
+		if (((array_len(meta.array) > 1 && root) || meta.arg._R)
+			&& (is_full(current->sub) || meta.arg._a))
 		{
 			GREEN(current->path);
 			PUT(":\n");
@@ -64,7 +65,7 @@ void			reader_sub(t_ls meta, t_reader *current, int root)
 		}
 		if (meta.arg._l && (root || meta.arg._R))
 		{
-			PUT("total ");		
+			PUT("total ");
 			PN(get_total(current->sub));
 			PUT("\n");
 		}
@@ -91,7 +92,7 @@ void			reader(t_ls meta, t_reader *head, t_reader *current, int root)
 	{
 		reader_sub(meta, head, root);
 	}
-	if (!current->next && !current->sub && !is_next_dir(current))
+	if (!current->next && !current->sub && !is_next_dir(current) && A_LEN(meta.array) > 1)
 		PUT("\n");
 }
 
@@ -111,7 +112,7 @@ t_reader				*lst_append(t_reader **head, t_reader *last)
 	return (last);
 }
 
-t_reader			*read_directory(DIR *directory, char *path)
+t_reader			*read_directory(DIR *directory, char *path, t_ls *meta, int i)
 {
 	t_reader		*tmp;
 	t_reader		*head;
@@ -126,9 +127,7 @@ t_reader			*read_directory(DIR *directory, char *path)
 		new_path = ft_strjoin(path, ft_strjoin("/", dir->d_name));
 		if (lstat(new_path, &sb))
 		{
-			PR(dir->d_name, "permission pas tres autorized\n");
-			if (errno == ENOENT)
-				PR("errno :", "\n");
+			(*meta)._err = stat_error((*meta)._err, (*meta).array, i, new_path);
 		}
 		else
 		{
@@ -136,19 +135,21 @@ t_reader			*read_directory(DIR *directory, char *path)
 			if (IS_DIR(sb, dir))
 			{
 				if (!(sub = opendir(new_path)))
-					PR(dir->d_name, "SHIT here we go encore\n");
-				tmp->sub = read_directory(sub, new_path);
+				{
+					(*meta)._err = dir_error((*meta)._err, (*meta).array, i, new_path);
+				}
+				else
+					tmp->sub = read_directory(sub, new_path, meta, i);
 			}
 		}
 		ft_strdel(&new_path);
 	}
-	printf("_____last ? %s\n", tmp->name);
 	tmp->last = 1;
 	closedir(directory);
 	return (head);
 }
 
-t_reader			*open_directory(t_ls meta)
+t_reader			*open_directory(t_ls *meta)
 {
 	DIR				*buff;
 	struct stat		sb;
@@ -159,14 +160,23 @@ t_reader			*open_directory(t_ls meta)
 	i = 0;
 	head = NULL;
 	new = NULL;
-	while (meta.array[i])
+	while ((*meta).array[i])
 	{
-		if (!(buff = opendir(meta.array[i])))
-			PR(meta.array[i], _UNKNOW);
-		if (lstat(meta.array[i], &sb))
-			PR(meta.array[i], _UNKNOW);
-		new = lst_append(&head, create(sb, meta.array[i], meta.array[i]));
-		new = lst_append(&new->sub, read_directory(buff, meta.array[i]));
+		(*meta).array_len = A_LEN((*meta)._err);
+		if (lstat((*meta).array[i], &sb))
+			(*meta)._err = stat_error((*meta)._err, (*meta).array, i, NULL);
+		if (!(buff = opendir((*meta).array[i])) && S_ISDIR(sb.st_mode))
+			(*meta)._err = dir_error((*meta)._err, (*meta).array, i, NULL);
+		if (A_LEN((*meta)._err) == (*meta).array_len)
+		{
+			new = lst_append(&head, create(sb, (*meta).array[i], (*meta).array[i]));
+			new = (S_ISDIR(sb.st_mode)) ?
+				lst_append(&new->sub, read_directory(buff, (*meta).array[i], meta, i)) : new;
+		}
+		if ((*meta)._err == NULL)
+		{
+			PUT("_________________\n");
+		}
 		i += 1;
 	}
 	return (head);

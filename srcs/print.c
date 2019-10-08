@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/10 21:36:12 by princesse         #+#    #+#             */
-/*   Updated: 2019/10/02 22:49:52 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/08 22:28:22 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ char		*print_type(mode_t m)
 	else if (S_ISSOCK(m))
 		return ("s");
 	else
-		return ("-");	
+		return ("-");
 }
 
 void		print_right(mode_t	st_mode)
@@ -52,12 +52,10 @@ void		print_right(mode_t	st_mode)
 
 void	print_basic(t_ls meta, t_reader *current, int root)
 {
-	if (!meta.arg._a && (!ft_strcmp(current->name, ".")	|| !ft_strcmp(current->name, "..") || (current->name[0] == '.' )))
+	if (!meta.arg._a && (!ft_strcmp(current->name, ".")
+		|| !ft_strcmp(current->name, "..") || (current->name[0] == '.' )))
 		return;
 	PUT(current->name);
-	// PUT((current->next && !(root && is_next_dir(current))) ? "\t"
-	// 		: (!is_next_dir(current) || (is_next_dir(current) && meta.arg._R)) ? "\n"
-	// 		: (meta.arg._R) ? "\n" : "\0");
 	if (current->next && !(root && is_next_dir(current)))
 		ft_putchar('\t');
 	else if (!current->last || meta.arg._R)

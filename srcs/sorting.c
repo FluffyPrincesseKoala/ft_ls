@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/02 19:57:11 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/02 20:03:48 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/08 22:37:01 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void			swap_data(t_reader **a, t_reader **b)
 	sb = ((*a)->sb);
 	path = ((*a)->path);
 	name = ((*a)->name);
-	
+
 	((*a)->sub) = ((*b)->sub);
 	((*a)->dir) = ((*b)->dir);
 	((*a)->sb) = ((*b)->sb);

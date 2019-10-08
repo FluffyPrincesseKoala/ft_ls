@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/30 15:24:04 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/02 22:33:30 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/08 23:40:56 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,18 @@
 						&& ft_strcmp(D->d_name, ".."))
 # define P_BASIC(FILE)	ft_putstr(FILE->name)
 # define _DIR(NAME) 	ft_putendl(ft_strcat(NAME, ":"));
-# define _UNKNOW 		"No such file or directory\n"
+
+# define _OPEN			"ls: impossible d'ouvrir le répertoire \'"
+
+# define _UNKNOW 		"\': No such file or directory"
+# define _ACCES 		"\': Permission denied"
+# define _LOOP	 		"\': Too many symbolic links"
+# define _TOOLONG 		"\': Is too long"
+# define _NOMEM 		"\': Out of memory"
+
 # define _PL(X)			ft_putendl(X);
 # define PUT(X)			ft_putstr(X);
 # define PN(X)			ft_putnbr(X);
-# define _READ(X)		reader(X, X)
 # define RED(X) 		ft_putstr("\033[1;31m"); \
 						ft_putstr(X);
 # define GREEN(X) 		ft_putstr("\033[0;32m"); \
@@ -80,15 +87,19 @@ typedef struct		s_ls
 	t_opt			arg;
 	t_reader		*file;
 	char			**array;
+	char			**_err;
+	int				array_len;
 }					t_ls;
 
-t_reader	*open_directory(t_ls meta);
-t_reader	*read_directory(DIR *directory, char *path);
+t_reader	*open_directory(t_ls *meta);
+t_reader	*read_directory(DIR *directory, char *path, t_ls *meta, int i);
 t_reader    *create(struct stat	sb, char *name, char *path);
 t_reader    *lst_append(t_reader **head, t_reader *last);
 
 int			array_len(char **array);
 void		free_array(char **array);
+char		**create_array(char *str);
+char		**array_add(char** array, char *add);
 
 void		reader(t_ls meta, t_reader *head, t_reader *current, int root);
 void		reader_sub(t_ls meta, t_reader *current, int root);
@@ -103,6 +114,10 @@ void		print_basic(t_ls meta, t_reader *current, int root);
 void		print_right(mode_t	st_mode);
 void 		print_l(t_ls meta, t_reader *current);
 int			get_total(t_reader *current);
+
+char		**stat_error(char **out, char**array, int index, char *_str);
+char		**dir_error(char **out, char **array, int index, char *_str);
+void		output_error(char const **out);
 
 int			strlen_rdelim(const char *str, int c);
 int			is_next_dir(t_reader *current);

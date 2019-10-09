@@ -50,7 +50,7 @@ void		print_right(mode_t	st_mode)
 	ft_putchar(' ');
 }
 
-void	print_basic(t_ls meta, t_reader *current, int root)
+void		print_basic(t_ls meta, t_reader *current, int root)
 {
 	if (!meta.arg._a && (!ft_strcmp(current->name, ".")
 		|| !ft_strcmp(current->name, "..") || (current->name[0] == '.' )))
@@ -64,11 +64,31 @@ void	print_basic(t_ls meta, t_reader *current, int root)
 		ft_putchar('\n');
 }
 
-void    print_l(t_ls meta, t_reader *current)
+void		print_time(t_reader *current)
 {
-    char	*time;
-	time = ctime(&current->sb.st_mtime);
-	time = ft_strsub(time, 0, _LEN(time) - 1);
+	char	*temps;
+	time_t	now;
+
+	temps = ctime(&current->sb.st_mtime);
+	temps = ft_strsub(temps, 0, _LEN(temps) - 1);
+	now = time(0);
+	char *date = ft_strndup(&temps[4], 7);
+	char *hour = ft_strndup(&temps[11], 5);
+	char *year = ft_strndup(&temps[20], 4);
+	
+	PUT(date);
+	if (current->sb.st_mtime <= now  - _SIXMONTH)
+		ft_putstr(year);
+	else
+		ft_putstr(hour);
+	ft_strdel(&temps);
+	ft_strdel(&date);
+	ft_strdel(&hour);
+	ft_strdel(&year);
+}
+
+void    	print_l(t_ls meta, t_reader *current)
+{
 
 	if (!meta.arg._a && (!ft_strcmp(current->name, ".")
 		|| !ft_strcmp(current->name, "..")))
@@ -83,13 +103,13 @@ void    print_l(t_ls meta, t_reader *current)
 	ft_putchar(' ');
 	ft_putnbr(current->sb.st_size);
 	ft_putchar('\t');
-	PUT(time);
-	PUT(" ");
+	print_time(current);
+	ft_putchar('\t');
 	CYAN(current->name);
 	if (S_ISLNK(current->sb.st_mode))
 	{
-		char linkname[PATH_MAX];
-		ssize_t r = readlink(current->name, linkname, PATH_MAX);
+		char linkname[_PC_PATH_MAX];
+		ssize_t r = readlink(current->name, linkname, _PC_PATH_MAX);
 		if (r != -1)
 		{
 			linkname[r] = '\0';

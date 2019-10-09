@@ -124,25 +124,24 @@ t_reader			*read_directory(DIR *directory, char *path, t_ls *meta, int i)
 	head = NULL;
 	while (directory && (dir = readdir(directory)))
 	{
-		new_path = ft_strjoin(path, ft_strjoin("/", dir->d_name));
-		if (lstat(new_path, &sb))
+		if (ft_strncmp(dir->d_name, ".", 1) || (*meta).arg._a)
 		{
-			(*meta)._err = stat_error((*meta)._err, (*meta).array, i, new_path);
-		}
-		else
-		{
-			tmp = lst_append(&head, create(sb, (char*)dir->d_name, new_path));
-			if (IS_DIR(sb, dir))
+			new_path = ft_strjoin(path, ft_strjoin("/", dir->d_name));
+			if (lstat(new_path, &sb))
+				(*meta)._err = stat_error((*meta)._err, (*meta).array, i, new_path);
+			else
 			{
-				if (!(sub = opendir(new_path)))
+				tmp = lst_append(&head, create(sb, (char*)dir->d_name, new_path));
+				if (IS_DIR(sb, dir) && (*meta).arg._R)
 				{
-					(*meta)._err = dir_error((*meta)._err, (*meta).array, i, new_path);
+					if (!(sub = opendir(new_path)))
+						(*meta)._err = dir_error((*meta)._err, (*meta).array, i, new_path);
+					else
+						tmp->sub = read_directory(sub, new_path, meta, i);
 				}
-				else
-					tmp->sub = read_directory(sub, new_path, meta, i);
 			}
+			ft_strdel(&new_path);
 		}
-		ft_strdel(&new_path);
 	}
 	tmp->last = 1;
 	closedir(directory);
@@ -172,10 +171,6 @@ t_reader			*open_directory(t_ls *meta)
 			new = lst_append(&head, create(sb, (*meta).array[i], (*meta).array[i]));
 			new = (S_ISDIR(sb.st_mode)) ?
 				lst_append(&new->sub, read_directory(buff, (*meta).array[i], meta, i)) : new;
-		}
-		if ((*meta)._err == NULL)
-		{
-			PUT("_________________\n");
 		}
 		i += 1;
 	}

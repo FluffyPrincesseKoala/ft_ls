@@ -42,6 +42,8 @@
 # define _TOOLONG 		"\': Is too long"
 # define _NOMEM 		"\': Out of memory"
 
+# define _SIXMONTH		15768000
+
 # define _PL(X)			ft_putendl(X);
 # define PUT(X)			ft_putstr(X);
 # define PN(X)			ft_putnbr(X);

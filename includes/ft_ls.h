@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/30 15:24:04 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/10 14:22:31 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/11 00:50:08 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@
 						&& ft_strcmp(D->d_name, ".."))
 # define P_BASIC(FILE)	ft_putstr(FILE->name)
 # define _DIR(NAME) 	ft_putendl(ft_strcat(NAME, ":"));
+# define _A(dir, A)		(ft_strncmp(dir->d_name, ".", 1) || A)
 
 # define _OPEN			"ls: impossible d'ouvrir le répertoire \'"
 
@@ -78,7 +79,7 @@ typedef struct		s_reader
 	struct stat		sb;
 	char			*name;
 	char			*path;
-	int				last;
+	int				sort;
 	struct s_reader	*next;
 	struct s_reader	*sub;
 }					t_reader;
@@ -101,11 +102,14 @@ int			array_len(char **array);
 void		free_array(char **array);
 char		**create_array(char *str);
 char		**array_add(char** array, char *add);
+void		free_reader(t_reader *current);
+void		free_meta(t_ls *meta);
 
 void		reader(t_ls meta, t_reader *head, t_reader *current, int root);
 void		reader_sub(t_ls meta, t_reader *current, int root);
 
 void		sort_map(t_reader **file, int (*f)(t_reader *, t_reader *));
+void		swap_data(t_reader **a, t_reader **b);
 int			cmp_name(t_reader *a, t_reader *b);
 int			cmp_time(t_reader *a, t_reader *b);
 int			rcmp_name(t_reader *a, t_reader *b);
@@ -120,6 +124,7 @@ char		**stat_error(char **out, char**array, int index, char *_str);
 char		**dir_error(char **out, char **array, int index, char *_str);
 void		output_error(char const **out);
 
+char		*resolve_path(struct dirent *dir, char *path);
 int			strlen_rdelim(const char *str, int c);
 int			is_next_dir(t_reader *current);
 char		*ft_strndup(const char *str, int len);

@@ -6,7 +6,7 @@
 #    By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/02/01 15:17:18 by cylemair          #+#    #+#              #
-#    Updated: 2019/10/10 13:36:41 by cylemair         ###   ########.fr        #
+#    Updated: 2019/10/11 00:26:07 by cylemair         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,12 +20,14 @@ NAME	=		ft_ls
 
 RM		=		rm -rf
 
-SRC		=		srcs/main.c 		\
-				srcs/array.c		\
-				srcs/lst_function.c \
-				srcs/print.c 		\
-				srcs/sorting.c 		\
-				srcs/error.c 		\
+SRC		=		srcs/main.c 			\
+				srcs/array.c			\
+				srcs/lst_function.c 	\
+				srcs/print.c 			\
+				srcs/sorting.c 			\
+				srcs/sorting_method.c 	\
+				srcs/error.c 			\
+				srcs/free.c 			\
 
 LIBA	=		libft/libft.a
 

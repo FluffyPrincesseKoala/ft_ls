@@ -6,13 +6,13 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/02 19:57:11 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/10 14:24:14 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/11 00:10:14 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/ft_ls.h"
 
-void			swap_data(t_reader **a, t_reader **b)
+void				swap_data(t_reader **a, t_reader **b)
 {
 	struct s_reader	*c;
 	struct dirent	*dir;
@@ -66,33 +66,4 @@ int				rcmp_time(t_reader *a, t_reader *b)
 	if ((int)a->sb.st_mtime == (int)b->sb.st_mtime)
 		return (rcmp_name(a, b));
 	return (1);
-}
-
-void			sort_map(t_reader **file, int (*f)(t_reader *, t_reader *))
-{
-	t_reader	*head;
-	t_reader	*current;
-	int			swaped;
-
-	head = *file;
-	while (head)
-	{
-		swaped = 0;
-		current = head->next;
-		if (head->sub)
-		{
-			sort_map(&head->sub, (*f));
-		}
-		while (current && !swaped)
-		{
-			if ((*f)(head, current) > 0)
-			{
-				swap_data(&head, &current);
-				swaped = 1;
-			}
-			current = current->next;
-		}
-		if (!current || !swaped)
-			head = head->next;
-	}
 }

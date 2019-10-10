@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/30 22:08:06 by princesse         #+#    #+#             */
-/*   Updated: 2019/10/10 14:27:17 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/11 00:52:55 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ t_reader        *create(struct stat	sb, char *name, char *path)
 	new->sb = sb;
 	new->path = ft_strdup(path);
 	new->name = ft_strdup(name);
-	new->last = 0;
+	new->sort = 0;
 	new->sub = NULL;
 	new->next = NULL;
 	return (new);
@@ -133,19 +133,15 @@ t_reader			*read_directory(DIR *directory, char *path, t_ls *meta, int i)
 			else
 			{
 				tmp = lst_append(&head, create(sb, (char*)dir->d_name, new_path));
-				if (IS_DIR(sb, dir) && (*meta).arg._R)
-				{
-					if (!(sub = opendir(new_path)))
+					if (IS_DIR(sb, dir) && (*meta).arg._R && !(sub = opendir(new_path)))
 						(*meta)._err = dir_error((*meta)._err, (*meta).array, i, new_path);
-					else
+					else if (IS_DIR(sb, dir) && (*meta).arg._R)
 						tmp->sub = read_directory(sub, new_path, meta, i);
-				}
 			}
 			ft_strdel(&new_path);
 			ft_strdel(&tmp_path);
 		}
 	}
-	tmp->last = 1;
 	closedir(directory);
 	return (head);
 }

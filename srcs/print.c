@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/10 21:36:12 by princesse         #+#    #+#             */
-/*   Updated: 2019/10/08 22:28:22 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/10 21:14:36 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void		print_basic(t_ls meta, t_reader *current, int root)
 	PUT(current->name);
 	if (current->next && !(root && is_next_dir(current)))
 		ft_putchar('\t');
-	else if (!current->last || meta.arg._R)
+	else if (current->next || meta.arg._R)
 		ft_putstr("\n\n");
 	else
 		ft_putchar('\n');
@@ -75,7 +75,7 @@ void		print_time(t_reader *current)
 	char *date = ft_strndup(&temps[4], 7);
 	char *hour = ft_strndup(&temps[11], 5);
 	char *year = ft_strndup(&temps[20], 4);
-	
+
 	PUT(date);
 	if (current->sb.st_mtime <= now  - _SIXMONTH)
 		ft_putstr(year);

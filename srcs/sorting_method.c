@@ -1,35 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free.c                                             :+:      :+:    :+:   */
+/*   sorting_method.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/09/19 17:36:31 by princesse         #+#    #+#             */
-/*   Updated: 2019/10/11 00:13:31 by cylemair         ###   ########.fr       */
+/*   Created: 2019/10/11 00:10:42 by cylemair          #+#    #+#             */
+/*   Updated: 2019/10/11 00:12:27 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/ft_ls.h"
 
-void				free_reader(t_reader *current)
+void			sort_map(t_reader **file, int (*f)(t_reader *, t_reader *))
 {
-	if (current)
-	{
-		if (current->sub)
-			free_reader(current->sub);
-		if (current->next)
-			free_reader(current->next);
-		free(current->name);
-		free(current->path);
-		free(current);
-	}
-}
+	t_reader	*head;
+	t_reader	*current;
 
-void				free_meta(t_ls *meta)
-{
-	if ((*meta).file)
-		free_reader((*meta).file);
-	free_array((*meta).array);
-	free_array((*meta)._err);
+	head = *file;
+	while (head)
+	{
+		current = head->next;
+		while (current)
+		{
+			if ((*f)(head, current) > 0)
+				swap_data(&head, &current);
+			current = current->next;
+		}
+		if (!current)
+		{
+			if (head->sub && !head->sub->sort)
+				sort_map(&head->sub, (*f));
+			head->sort = 1;
+			head = head->next;
+		}
+	}
 }

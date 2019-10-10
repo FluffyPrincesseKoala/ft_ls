@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/15 15:13:59 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/10 14:23:40 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/11 00:59:00 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,28 +229,6 @@ char				**check_last(char **array) // useless
 		free(array[i]);
 	free(array);
 	return (new);
-}
-
-void				free_reader(t_reader *current)
-{
-	if (current)
-	{
-		if (current->sub)
-			free_reader(current->sub);
-		if (current->next)
-			free_reader(current->next);
-		free(current->name);
-		free(current->path);
-		free(current);
-	}
-}
-
-void				free_meta(t_ls *meta)
-{
-	if ((*meta).file)
-		free_reader((*meta).file);
-	free_array((*meta).array);
-	free_array((*meta)._err);
 }
 
 int					main(int ac, char **av)

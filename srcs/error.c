@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/08 16:44:16 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/10 13:59:53 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/10 22:24:59 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ char			**dir_error(char **out, char **array, int index, char *_str)
 	char	*name;
 
 	name = ft_strdup((_str) ? _str : array[index]);
+	new = NULL;
 	if (errno == EACCES)
 		new = ft_strjoin((char const *)_OPEN,
 		(tmp = ft_strjoin(name, (char const *)_ACCES)));
@@ -57,7 +58,8 @@ char			**dir_error(char **out, char **array, int index, char *_str)
 	else if (errno == ENOMEM)
 		new = ft_strjoin((char const *)_OPEN,
 		(tmp = ft_strjoin(name, (char const *)_NOMEM)));
-	out = (!out) ? create_array(new) : array_add(out, new);
+	if (new)
+		out = (!out) ? create_array(new) : array_add(out, new);
 	ft_strdel(&tmp);
 	ft_strdel(&new);
 	ft_strdel(&name);

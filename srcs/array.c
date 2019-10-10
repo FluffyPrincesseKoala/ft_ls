@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/30 22:20:38 by princesse         #+#    #+#             */
-/*   Updated: 2019/10/10 14:09:31 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/11 00:30:05 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,7 @@ int			array_len(char **array)
 
 	i = 0;
 	while (array && array[i])
-	{
 		i += 1;
-	}
 	return (i);
 }
 
@@ -58,28 +56,28 @@ char		**create_array(char *str)
 char		**array_add(char **array, char *add)
 {
 	char	**new;
-	char	i;
-	int		len;
+	int		i;
 	int		new_len;
 
 	i = array_len(array);
-	if (!i || !(new = malloc(sizeof(char*) * (i + 2))))
-		return ((array) ? array : NULL);
+	if ((!i))
+		return (array);
+	if (!(new = malloc(sizeof(char*) * (i +  2))))
+		return (array);
 	i = 0;
 	while (array[i])
 	{
-		if ((len = ft_strlen(array[i]) - 1) == (new_len = strlen_rdelim(array[i], '/'))
-			&& len >= 1)
-			new[i] = ft_strndup(array[i], new_len);
-		new[i] = ft_strdup(array[i]);
+		if ((ft_strlen(array[i]) - 1 == strlen_rdelim(add, '/')
+			&& strlen_rdelim(add, '/') >= 1))
+			new[i] = ft_strndup(array[i], strlen_rdelim(add, '/'));
+		else
+			new[i] = ft_strdup(array[i]);
 		i++;
 	}
-	if ((len = ft_strlen(add) - 1) == (new_len = strlen_rdelim(add, '/'))
-		&& len >= 1)
-		new[i] = ft_strndup(add, new_len);
-	else
-		new[i] = ft_strdup(add);
+	new[i] = ((ft_strlen(array[i]) - 1 == strlen_rdelim(add, '/')
+		&& strlen_rdelim(add, '/') >= 1)) ? ft_strndup(add, new_len)
+											: ft_strdup(add);
 	new[++i] = NULL;
-	ft_memdel((void**)array);
+	free_array(array);
 	return (new);
 }

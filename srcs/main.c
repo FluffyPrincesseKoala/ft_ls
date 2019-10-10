@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/15 15:13:59 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/09 00:03:02 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/10 14:23:40 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ char		*ft_strndup(const char *str, int len)
 	int		i;
 
 	i = 0;
-	if (!(new = malloc(sizeof(char) * (len))))
+	if (!(new = malloc(sizeof(char) * (len + 1))))
 		return (NULL);
 	while (str && str[i] && i != len)
 	{
@@ -231,6 +231,28 @@ char				**check_last(char **array) // useless
 	return (new);
 }
 
+void				free_reader(t_reader *current)
+{
+	if (current)
+	{
+		if (current->sub)
+			free_reader(current->sub);
+		if (current->next)
+			free_reader(current->next);
+		free(current->name);
+		free(current->path);
+		free(current);
+	}
+}
+
+void				free_meta(t_ls *meta)
+{
+	if ((*meta).file)
+		free_reader((*meta).file);
+	free_array((*meta).array);
+	free_array((*meta)._err);
+}
+
 int					main(int ac, char **av)
 {
 	t_ls			meta;
@@ -239,10 +261,10 @@ int					main(int ac, char **av)
 	if (meta.array == NULL)
 		meta.array = create_array(".");
 	meta.file = open_directory(&meta);
-
 	if (array_len(meta._err) > 0 && array_len(meta._err) == array_len(meta.array))
 	{
 		output_error((char const **)meta._err);
+		free_meta(&meta);
 		exit(errno);
 	}
 	if (meta.arg._r)
@@ -261,4 +283,5 @@ int					main(int ac, char **av)
 	}
 	reader(meta, meta.file, meta.file, 1);
 	output_error((char const **)meta._err);
+	free_meta(&meta);
 }

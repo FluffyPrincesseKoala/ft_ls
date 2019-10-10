@@ -6,11 +6,11 @@
 #    By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/02/01 15:17:18 by cylemair          #+#    #+#              #
-#    Updated: 2019/10/08 21:37:43 by cylemair         ###   ########.fr        #
+#    Updated: 2019/10/10 13:36:41 by cylemair         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-CC		=		gcc -g3#-fsanitize=address
+CC		=		gcc -g3 #-fsanitize=address
 
 LDFLAGS	+=		-Llibft -Werror -Wall -Wextra
 
@@ -27,7 +27,7 @@ SRC		=		srcs/main.c 		\
 				srcs/sorting.c 		\
 				srcs/error.c 		\
 
-LIBFT	=		libft/libft.a
+LIBA	=		libft/libft.a
 
 DIR		=		includes/
 
@@ -36,7 +36,7 @@ OBJS	:=		$(SRC:.c=.o)
 all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
-	$(CC) -o $(NAME) $(OBJS) $(LDFLAGS) $(LIBFT)
+	$(CC) -o $(NAME) $(OBJS) $(LIBA)
 
 $(LIBFT):
 	make re -C libft/

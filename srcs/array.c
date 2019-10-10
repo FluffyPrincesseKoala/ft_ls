@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/30 22:20:38 by princesse         #+#    #+#             */
-/*   Updated: 2019/10/08 21:46:53 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/10 14:09:31 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ char		**create_array(char *str)
 		return (NULL);
 	if ((len = ft_strlen(str) - 1) == (new_len = strlen_rdelim(str, '/'))
 		&& len >= 1)
-		new[0] = ft_strndup(str, new_len);
+		new[0] = ft_strndup(str, len);
 	else
 		new[0] = ft_strdup(str);
 	new[1] = NULL;

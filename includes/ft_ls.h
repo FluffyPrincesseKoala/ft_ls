@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/30 15:24:04 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/08 23:40:56 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/10 14:22:31 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@
 # define _TOOLONG 		"\': Is too long"
 # define _NOMEM 		"\': Out of memory"
 
-# define _SIXMONTH		15768000
+# define _SIXMONTH		(15768000)
 
 # define _PL(X)			ft_putendl(X);
 # define PUT(X)			ft_putstr(X);
@@ -76,7 +76,6 @@ typedef struct		s_opt
 typedef struct		s_reader
 {
 	struct stat		sb;
-	struct dirent	*dir;
 	char			*name;
 	char			*path;
 	int				last;

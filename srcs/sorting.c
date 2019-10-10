@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/02 19:57:11 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/08 22:37:01 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/10 14:24:14 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,19 +21,16 @@ void			swap_data(t_reader **a, t_reader **b)
 	char			*name;
 
 	c = ((*a)->sub);
-	dir = ((*a)->dir);
 	sb = ((*a)->sb);
 	path = ((*a)->path);
 	name = ((*a)->name);
 
 	((*a)->sub) = ((*b)->sub);
-	((*a)->dir) = ((*b)->dir);
 	((*a)->sb) = ((*b)->sb);
 	((*a)->path) = ((*b)->path);
 	((*a)->name) = ((*b)->name);
 
 	((*b)->sub) = c;
-	((*b)->dir) = dir;
 	((*b)->sb) = sb;
 	((*b)->path) = path;
 	((*b)->name) = name;
@@ -95,7 +92,7 @@ void			sort_map(t_reader **file, int (*f)(t_reader *, t_reader *))
 			}
 			current = current->next;
 		}
-		if (!current && !swaped)
+		if (!current || !swaped)
 			head = head->next;
 	}
 }

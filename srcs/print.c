@@ -6,16 +6,11 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/10 21:36:12 by princesse         #+#    #+#             */
-/*   Updated: 2019/10/10 21:14:36 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/11 19:37:08 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../includes/ft_ls.h"
-
-/*
-**	https://en.wikipedia.org/wiki/Unix_file_types#FIFO_(named_pipe)
-**	http://manpagesfr.free.fr/man/man2/stat.2.html
-*/
+#include "../includes/ft_ls.h"
 
 char		*print_type(mode_t m)
 {
@@ -35,27 +30,36 @@ char		*print_type(mode_t m)
 		return ("-");
 }
 
-void		print_right(mode_t	st_mode)
+void		print_right(mode_t st_mode)
 {
 	ft_putstr(print_type(st_mode));
-    ft_putstr((st_mode & S_IRUSR) ? "r" : "-");
-    ft_putstr((st_mode & S_IWUSR) ? "w" : "-");
-    ft_putstr((st_mode & S_ISUID) ? "s" : (st_mode & S_IXUSR) ? "x" : "-");
-    ft_putstr((st_mode & S_IRGRP) ? "r" : "-");
-    ft_putstr((st_mode & S_IWGRP) ? "w" : "-");
-    ft_putstr((st_mode & S_ISGID) ? "s" : (st_mode & S_IXGRP) ? "x" : "-");
-    ft_putstr((st_mode & S_IROTH) ? "r" : "-");
-    ft_putstr((st_mode & S_IWOTH) ? "w" : "-");
-    ft_putstr((st_mode & S_ISVTX) ? "t" : (st_mode & S_IXOTH) ? "x" : "-");
+	ft_putstr((st_mode & S_IRUSR) ? "r" : "-");
+	ft_putstr((st_mode & S_IWUSR) ? "w" : "-");
+	if (st_mode & S_ISUID)
+		ft_putstr("s");
+	else
+		ft_putstr((st_mode & S_IXUSR) ? "x" : "-");
+	ft_putstr((st_mode & S_IRGRP) ? "r" : "-");
+	ft_putstr((st_mode & S_IWGRP) ? "w" : "-");
+	if (st_mode & S_ISGID)
+		ft_putstr("s");
+	else
+		ft_putstr((st_mode & S_IXGRP) ? "x" : "-");
+	ft_putstr((st_mode & S_IROTH) ? "r" : "-");
+	ft_putstr((st_mode & S_IWOTH) ? "w" : "-");
+	if ((st_mode & S_ISVTX))
+		ft_putstr("t");
+	else
+		ft_putstr((st_mode & S_IXOTH) ? "x" : "-");
 	ft_putchar(' ');
 }
 
 void		print_basic(t_ls meta, t_reader *current, int root)
 {
 	if (!meta.arg._a && (!ft_strcmp(current->name, ".")
-		|| !ft_strcmp(current->name, "..") || (current->name[0] == '.' )))
-		return;
-	PUT(current->name);
+		|| !ft_strcmp(current->name, "..") || (current->name[0] == '.')))
+		return ;
+	ft_putstr(current->name);
 	if (current->next && !(root && is_next_dir(current)))
 		ft_putchar('\t');
 	else if (current->next || meta.arg._R)
@@ -66,18 +70,20 @@ void		print_basic(t_ls meta, t_reader *current, int root)
 
 void		print_time(t_reader *current)
 {
+	char	*date;
+	char	*hour;
+	char	*year;
 	char	*temps;
 	time_t	now;
 
 	temps = ctime(&current->sb.st_mtime);
 	temps = ft_strsub(temps, 0, _LEN(temps) - 1);
 	now = time(0);
-	char *date = ft_strndup(&temps[4], 7);
-	char *hour = ft_strndup(&temps[11], 5);
-	char *year = ft_strndup(&temps[20], 4);
-
-	PUT(date);
-	if (current->sb.st_mtime <= now  - _SIXMONTH)
+	date = ft_strndup(&temps[4], 7);
+	hour = ft_strndup(&temps[11], 5);
+	year = ft_strndup(&temps[20], 4);
+	ft_putstr(date);
+	if (current->sb.st_mtime <= now - _SIXMONTH)
 		ft_putstr(year);
 	else
 		ft_putstr(hour);
@@ -87,43 +93,25 @@ void		print_time(t_reader *current)
 	ft_strdel(&year);
 }
 
-void    	print_l(t_ls meta, t_reader *current)
+void		print_l(t_ls meta, t_reader *current)
 {
+	char	linkname[_PC_PATH_MAX];
+	ssize_t r;
 
+	r = readlink(current->name, linkname, _PC_PATH_MAX);
 	if (!meta.arg._a && (!ft_strcmp(current->name, ".")
 		|| !ft_strcmp(current->name, "..")))
-		return;
-	print_right(current->sb.st_mode);
-	PUT(" ");
-	ft_putnbr(current->sb.st_nlink);
-	PUT(" ");
-	ft_putstr((getpwuid(current->sb.st_uid))->pw_name);
-	ft_putchar(' ');
-	ft_putstr((getgrgid(current->sb.st_gid))->gr_name);
-	ft_putchar(' ');
-	ft_putnbr(current->sb.st_size);
-	ft_putchar('\t');
+		return ;
+	DISPLAY();
 	print_time(current);
 	ft_putchar('\t');
 	CYAN(current->name);
 	if (S_ISLNK(current->sb.st_mode))
 	{
-		char linkname[_PC_PATH_MAX];
-		ssize_t r = readlink(current->name, linkname, _PC_PATH_MAX);
 		if (r != -1)
-		{
 			linkname[r] = '\0';
-			PUT(" -> ");
-			PUT(linkname);
-		}
+		ft_putstr(" -> ");
+		ft_putstr(linkname);
 	}
-	PUT("\n");
-	RESET();
-}
-
-int			get_total(t_reader *current)
-{
-	if (current->next)
-		return ((current->sb.st_blocks/2) + get_total(current->next));
-	return (current->sb.st_blocks/2);
+	ft_putstr("\n\033[0m");
 }

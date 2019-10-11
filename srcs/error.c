@@ -6,19 +6,19 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/08 16:44:16 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/10 22:24:59 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/11 19:41:01 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/ft_ls.h"
 
-char		**stat_error(char **out, char **array, int index, char *_str)
+char		**stat_error(char **out, char **array, int index, char *str)
 {
-	char 	*tmp;
-	char 	*new;
+	char	*tmp;
+	char	*new;
 	char	*name;
 
-	name = ft_strdup((_str) ? _str : array[index]);
+	name = ft_strdup((str) ? str : array[index]);
 	if (errno == EACCES)
 		new = ft_strjoin((char const *)_OPEN,
 		(tmp = ft_strjoin(name, (char const *)_ACCES)));
@@ -41,13 +41,13 @@ char		**stat_error(char **out, char **array, int index, char *_str)
 	return (out);
 }
 
-char			**dir_error(char **out, char **array, int index, char *_str)
+char		**d_error(char **out, char **array, int index, char *str)
 {
-	char 	*tmp;
-	char 	*new;
+	char	*tmp;
+	char	*new;
 	char	*name;
 
-	name = ft_strdup((_str) ? _str : array[index]);
+	name = ft_strdup((str) ? str : array[index]);
 	new = NULL;
 	if (errno == EACCES)
 		new = ft_strjoin((char const *)_OPEN,

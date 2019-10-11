@@ -6,15 +6,15 @@
 #    By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/02/01 15:17:18 by cylemair          #+#    #+#              #
-#    Updated: 2019/10/11 00:26:07 by cylemair         ###   ########.fr        #
+#    Updated: 2019/10/11 17:25:21 by cylemair         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC		=		gcc -g3 #-fsanitize=address
 
-LDFLAGS	+=		-Llibft -Werror -Wall -Wextra
+LDFLAGS	=		-L libft/ -lft
 
-CFLAGS	+=		-Iincludes -Ilibft
+CFLAGS	+=		-Werror -Wall -Wextra
 
 NAME	=		ft_ls
 
@@ -28,20 +28,19 @@ SRC		=		srcs/main.c 			\
 				srcs/sorting_method.c 	\
 				srcs/error.c 			\
 				srcs/free.c 			\
-
-LIBA	=		libft/libft.a
+				srcs/string.c 			\
+				srcs/directory.c		\
+				srcs/init.c				\
 
 DIR		=		includes/
 
-OBJS	:=		$(SRC:.c=.o)
+OBJS	=		$(SRC:.c=.o)
 
 all: $(NAME)
 
-$(NAME): $(OBJS) $(LIBFT)
-	$(CC) -o $(NAME) $(OBJS) $(LIBA)
-
-$(LIBFT):
-	make re -C libft/
+$(NAME): $(OBJS)
+	@make re -C libft/
+	$(CC)  -o $(NAME) $(OBJS) $(LDFLAGS)
 
 clean:
 	$(RM) $(OBJS)

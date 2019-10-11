@@ -73,17 +73,12 @@ RM		=		rm -rf
 all: $(NAME)
 
 $(NAME): $(OBJS) $(SRCS)
-	$(CC) -Wall -Wextra -Werror -c $(SRCS)
+	$(CC) $(CFLAGS) -c $(SRCS)
 	ar rc $(NAME) $(OBJS)
 	ranlib $(NAME)
-
-test: re
-	gcc test.c libft.a -I .
-	./a.out
 	
 clean:
 	$(RM) $(OBJS)
-	$(RM) *.o
 
 fclean: clean
 	$(RM) $(NAME)

@@ -1,35 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free.c                                             :+:      :+:    :+:   */
+/*   string.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/09/19 17:36:31 by princesse         #+#    #+#             */
-/*   Updated: 2019/10/11 15:30:56 by cylemair         ###   ########.fr       */
+/*   Created: 2019/10/11 15:13:16 by cylemair          #+#    #+#             */
+/*   Updated: 2019/10/11 19:40:36 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/ft_ls.h"
 
-void				free_reader(t_reader *current)
+int				strlen_rdelim(const char *str, int c)
 {
-	if (current)
+	int			i;
+
+	i = ft_strlen(str) - 1;
+	while (str[i] && i)
 	{
-		if (current->sub)
-			free_reader(current->sub);
-		if (current->next)
-			free_reader(current->next);
-		free(current->name);
-		free(current->path);
-		free(current);
+		if (str[i] == c)
+			return (i);
+		i--;
 	}
+	return (i);
 }
 
-void				free_meta(t_ls *meta)
+char			*ft_strndup(const char *str, int len)
 {
-	if ((*meta).file)
-		free_reader((*meta).file);
-	free_array((*meta).array);
-	free_array((*meta)._err);
+	char		*new;
+	int			i;
+
+	i = 0;
+	if (!(new = malloc(sizeof(char) * (len + 1))))
+		return (NULL);
+	while (str && str[i] && i != len)
+	{
+		new[i] = str[i];
+		i++;
+	}
+	new[i] = '\0';
+	return (new);
 }

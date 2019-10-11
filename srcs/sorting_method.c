@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/11 00:10:42 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/11 00:12:27 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/11 19:38:28 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,5 +34,23 @@ void			sort_map(t_reader **file, int (*f)(t_reader *, t_reader *))
 			head->sort = 1;
 			head = head->next;
 		}
+	}
+}
+
+void			choose_sorting(t_ls *meta)
+{
+	if ((*meta).arg._r)
+	{
+		if ((*meta).arg._t)
+			sort_map(&(*meta).file, &rcmp_time);
+		else
+			sort_map(&(*meta).file, &rcmp_name);
+	}
+	else
+	{
+		if ((*meta).arg._t)
+			sort_map(&(*meta).file, &cmp_time);
+		else
+			sort_map(&(*meta).file, &cmp_name);
 	}
 }

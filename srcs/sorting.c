@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/02 19:57:11 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/11 00:10:14 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/11 19:38:14 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 void				swap_data(t_reader **a, t_reader **b)
 {
 	struct s_reader	*c;
-	struct dirent	*dir;
 	struct stat		sb;
 	char			*path;
 	char			*name;
@@ -24,24 +23,22 @@ void				swap_data(t_reader **a, t_reader **b)
 	sb = ((*a)->sb);
 	path = ((*a)->path);
 	name = ((*a)->name);
-
 	((*a)->sub) = ((*b)->sub);
 	((*a)->sb) = ((*b)->sb);
 	((*a)->path) = ((*b)->path);
 	((*a)->name) = ((*b)->name);
-
 	((*b)->sub) = c;
 	((*b)->sb) = sb;
 	((*b)->path) = path;
 	((*b)->name) = name;
 }
 
-int				cmp_name(t_reader *a, t_reader *b)
+int					cmp_name(t_reader *a, t_reader *b)
 {
 	return (ft_strcmp(a->name, b->name));
 }
 
-int				cmp_time(t_reader *a, t_reader *b)
+int					cmp_time(t_reader *a, t_reader *b)
 {
 	if ((int)a->sb.st_mtime > (int)b->sb.st_mtime)
 		return (1);
@@ -50,7 +47,7 @@ int				cmp_time(t_reader *a, t_reader *b)
 	return (-1);
 }
 
-int				rcmp_name(t_reader *a, t_reader *b)
+int					rcmp_name(t_reader *a, t_reader *b)
 {
 	if (ft_strcmp(a->name, b->name) > 0)
 		return (-1);
@@ -59,7 +56,7 @@ int				rcmp_name(t_reader *a, t_reader *b)
 	return (0);
 }
 
-int				rcmp_time(t_reader *a, t_reader *b)
+int					rcmp_time(t_reader *a, t_reader *b)
 {
 	if ((int)a->sb.st_mtime > (int)b->sb.st_mtime)
 		return (-1);

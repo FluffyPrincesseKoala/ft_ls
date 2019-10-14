@@ -6,7 +6,7 @@
 #    By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/02/01 15:17:18 by cylemair          #+#    #+#              #
-#    Updated: 2019/10/14 13:07:05 by cylemair         ###   ########.fr        #
+#    Updated: 2019/10/14 17:08:34 by cylemair         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,7 @@ SRC		=		srcs/main.c 			\
 				srcs/array.c			\
 				srcs/lst_function.c 	\
 				srcs/print.c 			\
+				srcs/print_l.c 			\
 				srcs/sorting.c 			\
 				srcs/sorting_method.c 	\
 				srcs/error.c 			\

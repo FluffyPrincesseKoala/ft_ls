@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/10 21:36:12 by princesse         #+#    #+#             */
-/*   Updated: 2019/10/14 16:08:03 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/14 17:07:40 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,13 +56,13 @@ void		print_right(mode_t st_mode)
 
 void		print_basic(t_ls meta, t_reader *current, int root)
 {
-	if (!meta.arg._a && (!ft_strcmp(current->name, ".")
+	if (!meta.arg.a && (!ft_strcmp(current->name, ".")
 		|| !ft_strcmp(current->name, "..") || (current->name[0] == '.')))
 		return ;
 	ft_putstr(current->name);
 	if (current->next && !(root && is_next_dir(current)))
 		ft_putchar('\t');
-	else if (current->next || meta.arg._R)
+	else if (current->next || meta.arg.br)
 		ft_putstr("\n\n");
 	else
 		ft_putchar('\n');
@@ -91,36 +91,4 @@ void		print_time(t_reader *current)
 	ft_strdel(&date);
 	ft_strdel(&hour);
 	ft_strdel(&year);
-}
-
-void		print_l(t_ls meta, t_reader *current)
-{
-	char	linkname[_PC_PATH_MAX];
-	ssize_t r;
-
-	if (!meta.arg._a && (!ft_strcmp(current->name, ".")
-		|| !ft_strcmp(current->name, "..")))
-		return ;
-	print_right(current->sb.st_mode);
-	ft_putchar(' ');
-	ft_putnbr(current->sb.st_nlink);
-	ft_putchar(' ');
-	ft_putstr((getpwuid(current->sb.st_uid))->pw_name);
-	ft_putchar(' ');
-	ft_putstr((getgrgid(current->sb.st_gid))->gr_name);
-	ft_putchar(' ');
-	ft_putnbr(current->sb.st_size);
-	ft_putchar('\t');
-	print_time(current);
-	ft_putchar('\t');
-	CYAN(current->name);
-	if (S_ISLNK(current->sb.st_mode))
-	{
-		r = readlink(current->path, linkname, _PC_PATH_MAX);
-		if (r != -1)
-			linkname[r] = '\0';
-		ft_putstr(" -> ");
-		ft_putstr(linkname);
-	}
-	ft_putstr("\n\033[0m");
 }

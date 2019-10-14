@@ -6,40 +6,41 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/08 16:44:16 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/14 15:54:46 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/14 18:23:39 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/ft_ls.h"
 
+char		*concat(char *error, char *name)
+{
+	char	*new;
+	char	*tmp;
+
+	tmp = ft_strjoin((char const *)name, (char const *)error);
+	new = ft_strjoin((char const *)_OPEN, (char const *)tmp);
+	ft_strdel(&tmp);
+	return (new);
+}
+
 char		**stat_error(char **out, char **array, int index, char *str)
 {
-	char	*tmp;
 	char	*new;
 	char	*name;
 
 	name = ft_strdup((str) ? str : array[index]);
 	new = NULL;
-	tmp = NULL;
-
 	if (errno == EACCES)
-		new = ft_strjoin((char const *)_OPEN,
-		(tmp = ft_strjoin(name, (char const *)_ACCES)));
-	else if (errno == ELOOP){
-		new = ft_strjoin((char const *)_OPEN,
-		(tmp = ft_strjoin(name, (char const *)_LOOP)));
-	}
+		new = concat(_ACCES, name);
+	else if (errno == ELOOP)
+		new = concat(_LOOP, name);
 	else if (errno == ENAMETOOLONG)
-		new = ft_strjoin((char const *)_OPEN,
-		(tmp = ft_strjoin(name, (char const *)_TOOLONG)));
+		new = concat(_TOOLONG, name);
 	else if (errno == ENOENT)
-		new = ft_strjoin((char const *)_OPEN,
-		(tmp = ft_strjoin(name, (char const *)_UNKNOW)));
+		new = concat(_UNKNOW, name);
 	else if (errno == ENOMEM)
-		new = ft_strjoin((char const *)_OPEN,
-		(tmp = ft_strjoin(name, (char const *)_NOMEM)));
+		new = concat(_NOMEM, name);
 	out = (!out) ? create_array(new) : array_add(out, new);
-	ft_strdel(&tmp);
 	ft_strdel(&new);
 	ft_strdel(&name);
 	return (out);
@@ -47,38 +48,25 @@ char		**stat_error(char **out, char **array, int index, char *str)
 
 char		**d_error(char **out, char **array, int index, char *str)
 {
-	char	*tmp;
 	char	*new;
 	char	*name;
 
 	name = ft_strdup((str) ? str : array[index]);
 	new = NULL;
-	tmp = NULL;
-	// if (!ft_strcmp(name, "Makefile"))
-	// {
-	// 	_PL("OUI");
-	// }
 	if (errno == EACCES)
-		new = ft_strjoin((char const *)_OPEN,
-		(tmp = ft_strjoin(name, (char const *)_ACCES)));
+		new = concat(_ACCES, name);
 	else if (errno == ELOOP)
-		new = ft_strjoin((char const *)_OPEN,
-		(tmp = ft_strjoin(name, (char const *)_LOOP)));
+		new = concat(_LOOP, name);
 	else if (errno == ENAMETOOLONG)
-		new = ft_strjoin((char const *)_OPEN,
-		(tmp = ft_strjoin(name, (char const *)_TOOLONG)));
+		new = concat(_TOOLONG, name);
 	else if (errno == ENOENT)
-		new = ft_strjoin((char const *)_OPEN,
-		(tmp = ft_strjoin(name, (char const *)_UNKNOW)));
+		new = concat(_UNKNOW, name);
 	else if (errno == ENOMEM)
-		new = ft_strjoin((char const *)_OPEN,
-		(tmp = ft_strjoin(name, (char const *)_NOMEM)));
+		new = concat(_NOMEM, name);
 	else if (errno == ENOTDIR)
-		new = ft_strjoin((char const *)_OPEN,
-		(tmp = ft_strjoin(name, (char const *)_NOTDIR)));
+		new = concat(_NOTDIR, name);
 	if (new)
 		out = (!out) ? create_array(new) : array_add(out, new);
-	ft_strdel(&tmp);
 	ft_strdel(&new);
 	ft_strdel(&name);
 	return (out);

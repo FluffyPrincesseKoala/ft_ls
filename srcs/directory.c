@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/11 17:17:25 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/14 15:54:38 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/14 18:28:41 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,7 @@ int					get_total(t_reader *current)
 	return (current->sb.st_blocks / 2);
 }
 
-t_reader			*read_directory(DIR *directory, char *path,
-									t_ls *meta, int i)
+t_reader			*read_directory(DIR *space, char *path, t_ls *meta, int i)
 {
 	t_reader		*tmp;
 	t_reader		*head;
@@ -55,27 +54,29 @@ t_reader			*read_directory(DIR *directory, char *path,
 	char			*tmp_path;
 
 	head = NULL;
-	while (directory && (dir = readdir(directory)))
+	while (space && (dir = readdir(space)))
 	{
-		(*meta).array_len = A_LEN((*meta)._err);
-		if (ft_strncmp(dir->d_name, ".", 1) || (*meta).arg._a)
+		(*meta).array_len = A_LEN((*meta).err);
+		if (ft_strncmp(dir->d_name, ".", 1) || (*meta).arg.a)
 			new_path = ft_strjoin(path, ((tmp_path = ft_strjoin("/", dir->d_name))));
 		if (new_path && lstat(new_path, &sb))
-			(*meta)._err = stat_error((*meta)._err, (*meta).array, i, new_path);
-		if (new_path && A_LEN((*meta)._err) == (*meta).array_len)
+			(*meta).err = stat_error((*meta).err, (*meta).array, i, new_path);
+		if (new_path && A_LEN((*meta).err) == (*meta).array_len)
 		{
 			tmp = append(&head, create(sb, (char*)dir->d_name, new_path));
-			if (IS_DIR(sb, dir) && (*meta).arg._R && !(sub = opendir(new_path)))
+			if ((S_ISDIR(sb.st_mode) && ft_strcmp(dir->d_name, ".")
+				&& ft_strcmp(dir->d_name, "..")) && (*meta).arg.br && !(sub = opendir(new_path)))
 			{
-				(*meta)._err = d_error((*meta)._err, (*meta).array, i, new_path);
+				(*meta).err = d_error((*meta).err, (*meta).array, i, new_path);
 			}
-			else if (IS_DIR(sb, dir) && (*meta).arg._R)
+			else if (((S_ISDIR(sb.st_mode) && ft_strcmp(dir->d_name, ".")
+				&& ft_strcmp(dir->d_name, "..")) && (*meta).arg.br))
 				tmp->sub = read_directory(sub, new_path, meta, i);
 		}
 		ft_strdel(&new_path);
 		ft_strdel(&tmp_path);
 	}
-	closedir(directory);
+	closedir(space);
 	return (head);
 }
 
@@ -92,16 +93,16 @@ t_reader			*open_directory(t_ls *meta)
 	new = NULL;
 	while ((*meta).array[++i])
 	{
-		(*meta).array_len = A_LEN((*meta)._err);
+		(*meta).array_len = A_LEN((*meta).err);
 		if (lstat((char*)(*meta).array[i], &sb))
-			(*meta)._err = stat_error((*meta)._err, (*meta).array, i, NULL);
+			(*meta).err = stat_error((*meta).err, (*meta).array, i, NULL);
 		if (!(buff = opendir((*meta).array[i])) && (S_ISDIR(sb.st_mode)))
-			(*meta)._err = d_error((*meta)._err, (*meta).array, i, NULL);
-		if (A_LEN((*meta)._err) == (*meta).array_len)
+			(*meta).err = d_error((*meta).err, (*meta).array, i, NULL);
+		if (A_LEN((*meta).err) == (*meta).array_len)
 		{
 			new = append(&head, create(sb, (*meta).array[i], (*meta).array[i]));
-			new = ((S_ISDIR(sb.st_mode) && _A((*meta).array[i]))
-			|| (S_ISDIR(sb.st_mode) && (*meta).arg._R)) ? append(&new->sub,
+			new = ((S_ISDIR(sb.st_mode))
+			|| (S_ISDIR(sb.st_mode) && (*meta).arg.br)) ? append(&new->sub,
 			read_directory(buff, (*meta).array[i], meta, i)) : new;
 		}
 	}

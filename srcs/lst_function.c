@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/30 22:08:06 by princesse         #+#    #+#             */
-/*   Updated: 2019/10/14 16:15:36 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/14 16:52:51 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,20 +31,20 @@ void			reader_sub(t_ls meta, t_reader *current, int root)
 {
 	if (current->sub)
 	{
-		if (((array_len(meta.array) > 1 && root) || meta.arg._R)
-			&& (is_full(current->sub) || meta.arg._a))
+		if (((array_len(meta.array) > 1 && root) || meta.arg.br)
+			&& (is_full(current->sub) || meta.arg.a))
 		{
 			GREEN(current->path);
-			PUT(":\n");
+			ft_putstr(":\n");
 			RESET();
 		}
-		if (meta.arg._l && (root || meta.arg._R))
+		if (meta.arg.l && (root || meta.arg.br))
 		{
-			PUT("total ");
-			PN(get_total(current->sub));
-			PUT("\n");
+			ft_putstr("total ");
+			ft_putnbr(get_total(current->sub));
+			ft_putchar('\n');
 		}
-		if (root || meta.arg._R)
+		if (root || meta.arg.br)
 		{
 			reader(meta, current->sub, current->sub, 0);
 		}
@@ -57,7 +57,7 @@ void			reader(t_ls meta, t_reader *head, t_reader *current, int root)
 {
 	if (!(root && current->sub))
 	{
-		(meta.arg._l) ? print_l(meta, current) : print_basic(meta,
+		(meta.arg.l) ? print_l(meta, current) : print_basic(meta,
 		current, root);
 	}
 	if (current->next)
@@ -70,7 +70,7 @@ void			reader(t_ls meta, t_reader *head, t_reader *current, int root)
 	}
 	if (!current->next && !current->sub && !is_next_dir(current)
 		&& A_LEN(meta.array) > 1)
-		PUT("\n");
+		ft_putchar('\n');
 }
 
 t_reader		*append(t_reader **head, t_reader *last)

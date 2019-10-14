@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/11 17:22:32 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/11 17:42:15 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/14 17:01:10 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,28 @@
 t_opt		read_arg(t_opt arg, char c)
 {
 	if (c == 'l')
-		arg._l = 1;
+		arg.l = 1;
 	else if (c == 'R')
-		arg._R = 1;
+		arg.br = 1;
 	else if (c == 'a')
-		arg._a = 1;
+		arg.a = 1;
 	else if (c == 'r')
-		arg._r = 1;
+		arg.r = 1;
 	else if (c == 't')
-		arg._t = 1;
+		arg.t = 1;
 	return (arg);
+}
+
+void		error_arg(char *name)
+{
+	ft_putstr("\033[1;31m");
+	ft_putstr_fd("ls: ", 2);
+	ft_putstr_fd("invalid option", 2);
+	ft_putstr_fd(": ", 2);
+	ft_putstr_fd(name, 2);
+	ft_putstr_fd("\n", 2);
+	RESET();
+	exit(-1);
 }
 
 t_ls		set_arg(t_ls new, char **av)
@@ -46,9 +58,9 @@ t_ls		set_arg(t_ls new, char **av)
 			is_opt = (av[y][x] == '-') ? 1 : is_opt;
 			new.arg = (is_opt) ? read_arg(new.arg, av[y][x]) : new.arg;
 		}
-		if (is_opt && !(BAD_OPTION(new)))
+		if (is_opt && !(OPTION(new)))
 		{
-			PR("invalid option", av[y]);
+			error_arg(av[y]);
 		}
 	}
 	return (new);
@@ -58,13 +70,13 @@ t_ls		init_arg(void)
 {
 	t_ls	new;
 
-	new.arg._l = 0;
-	new.arg._R = 0;
-	new.arg._a = 0;
-	new.arg._r = 0;
-	new.arg._t = 0;
+	new.arg.l = 0;
+	new.arg.br = 0;
+	new.arg.a = 0;
+	new.arg.r = 0;
+	new.arg.t = 0;
 	new.file = NULL;
-	new._err = NULL;
+	new.err = NULL;
 	new.array = NULL;
 	return (new);
 }

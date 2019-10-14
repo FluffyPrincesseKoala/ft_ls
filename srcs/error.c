@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/08 16:44:16 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/11 19:41:01 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/14 15:54:46 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,16 @@ char		**stat_error(char **out, char **array, int index, char *str)
 	char	*name;
 
 	name = ft_strdup((str) ? str : array[index]);
+	new = NULL;
+	tmp = NULL;
+
 	if (errno == EACCES)
 		new = ft_strjoin((char const *)_OPEN,
 		(tmp = ft_strjoin(name, (char const *)_ACCES)));
-	else if (errno == ELOOP)
+	else if (errno == ELOOP){
 		new = ft_strjoin((char const *)_OPEN,
 		(tmp = ft_strjoin(name, (char const *)_LOOP)));
+	}
 	else if (errno == ENAMETOOLONG)
 		new = ft_strjoin((char const *)_OPEN,
 		(tmp = ft_strjoin(name, (char const *)_TOOLONG)));
@@ -49,15 +53,29 @@ char		**d_error(char **out, char **array, int index, char *str)
 
 	name = ft_strdup((str) ? str : array[index]);
 	new = NULL;
+	tmp = NULL;
+	// if (!ft_strcmp(name, "Makefile"))
+	// {
+	// 	_PL("OUI");
+	// }
 	if (errno == EACCES)
 		new = ft_strjoin((char const *)_OPEN,
 		(tmp = ft_strjoin(name, (char const *)_ACCES)));
+	else if (errno == ELOOP)
+		new = ft_strjoin((char const *)_OPEN,
+		(tmp = ft_strjoin(name, (char const *)_LOOP)));
+	else if (errno == ENAMETOOLONG)
+		new = ft_strjoin((char const *)_OPEN,
+		(tmp = ft_strjoin(name, (char const *)_TOOLONG)));
 	else if (errno == ENOENT)
 		new = ft_strjoin((char const *)_OPEN,
 		(tmp = ft_strjoin(name, (char const *)_UNKNOW)));
 	else if (errno == ENOMEM)
 		new = ft_strjoin((char const *)_OPEN,
 		(tmp = ft_strjoin(name, (char const *)_NOMEM)));
+	else if (errno == ENOTDIR)
+		new = ft_strjoin((char const *)_OPEN,
+		(tmp = ft_strjoin(name, (char const *)_NOTDIR)));
 	if (new)
 		out = (!out) ? create_array(new) : array_add(out, new);
 	ft_strdel(&tmp);

@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/10 21:36:12 by princesse         #+#    #+#             */
-/*   Updated: 2019/10/11 19:37:08 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/14 16:08:03 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,16 +98,25 @@ void		print_l(t_ls meta, t_reader *current)
 	char	linkname[_PC_PATH_MAX];
 	ssize_t r;
 
-	r = readlink(current->name, linkname, _PC_PATH_MAX);
 	if (!meta.arg._a && (!ft_strcmp(current->name, ".")
 		|| !ft_strcmp(current->name, "..")))
 		return ;
-	DISPLAY();
+	print_right(current->sb.st_mode);
+	ft_putchar(' ');
+	ft_putnbr(current->sb.st_nlink);
+	ft_putchar(' ');
+	ft_putstr((getpwuid(current->sb.st_uid))->pw_name);
+	ft_putchar(' ');
+	ft_putstr((getgrgid(current->sb.st_gid))->gr_name);
+	ft_putchar(' ');
+	ft_putnbr(current->sb.st_size);
+	ft_putchar('\t');
 	print_time(current);
 	ft_putchar('\t');
 	CYAN(current->name);
 	if (S_ISLNK(current->sb.st_mode))
 	{
+		r = readlink(current->path, linkname, _PC_PATH_MAX);
 		if (r != -1)
 			linkname[r] = '\0';
 		ft_putstr(" -> ");

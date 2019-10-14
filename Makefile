@@ -6,7 +6,7 @@
 #    By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/02/01 15:17:18 by cylemair          #+#    #+#              #
-#    Updated: 2019/10/11 17:25:21 by cylemair         ###   ########.fr        #
+#    Updated: 2019/10/14 13:07:05 by cylemair         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,7 +39,7 @@ OBJS	=		$(SRC:.c=.o)
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	@make re -C libft/
+#	@make re -C libft/
 	$(CC)  -o $(NAME) $(OBJS) $(LDFLAGS)
 
 clean:

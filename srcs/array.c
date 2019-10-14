@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/30 22:20:38 by princesse         #+#    #+#             */
-/*   Updated: 2019/10/11 15:45:10 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/14 15:01:56 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ char		**array_add(char **array, char *add)
 
 	new_len = 0;
 	i = array_len(array);
-	if ((!i))
+	if ((!i) || !add)
 		return (array);
 	if (!(new = malloc(sizeof(char*) * (i + 2))))
 		return (array);

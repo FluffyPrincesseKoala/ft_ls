@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/11 15:13:16 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/11 19:40:36 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/14 14:50:33 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int				strlen_rdelim(const char *str, int c)
 	int			i;
 
 	i = ft_strlen(str) - 1;
-	while (str[i] && i)
+	while (str && i && str[i])
 	{
 		if (str[i] == c)
 			return (i);

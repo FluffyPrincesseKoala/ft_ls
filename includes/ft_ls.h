@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/30 15:24:04 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/11 19:41:31 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/14 15:57:58 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,10 @@
 
 # define _UNKNOW 		"\': No such file or directory"
 # define _ACCES 		"\': Permission denied"
-# define _LOOP	 		"\': Too many symbolic links"
+# define _LOOP	 		"\': directory causes a cycle"
 # define _TOOLONG 		"\': Is too long"
 # define _NOMEM 		"\': Out of memory"
+# define _NOTDIR 		"\': Not a directory"
 
 # define _SIXMONTH		(15768000)
 
@@ -69,34 +70,6 @@
 						ft_putstr_fd("\n", 2);			\
 						RESET();						\
 						exit(-1);						\
-
-# define ABUSE()		if (ft_strncmp(dir->d_name,		\
-						".", 1) || (*meta).arg._a)		\
-						len = ft_strjoin(path,		\
-						((tmp_path = ft_strjoin("/",	\
-						dir->d_name))));			 	\
-						if (len && lstat(len,	\
-						&sb))							\
-						(*meta)._err =					\
-						stat_error((*meta)._err,		\
-						(*meta).array, i, len);			\
-# define VAR()			t_reader		*tmp;			\
-						t_reader		*head;			\
-						DIR				*sub;			\
-						struct dirent	*dir;			\
-						struct stat		sb;				\
-						char			*len;			\
-						char			*tmp_path;		\
-# define DISPLAY()		print_right(current->sb.st_mode);	\
-						ft_putchar(' ');					\
-						ft_putnbr(current->sb.st_nlink);	\
-						ft_putchar(' ');					\
-						ft_putstr((getpwuid(current->sb.st_uid))->pw_name);	\
-						ft_putchar(' ');					\
-						ft_putstr((getgrgid(current->sb.st_gid))->gr_name);	\
-						ft_putchar(' ');					\
-						ft_putnbr(current->sb.st_size);		\
-						ft_putchar('\t');					\
 
 typedef struct		s_opt
 {

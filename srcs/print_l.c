@@ -6,13 +6,13 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 17:07:44 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/15 20:39:13 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/15 21:20:06 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/ft_ls.h"
 
-void				more_print_l(t_reader *current)
+void		more_print_l(t_reader *current)
 {
 	ft_putchar(' ');
 	ft_putnbr(current->sb.st_nlink);

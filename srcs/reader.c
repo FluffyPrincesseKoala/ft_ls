@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/15 12:34:58 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/15 21:18:37 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/15 21:20:21 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ t_reader			*go_sub(struct dirent *dir, t_ls *meta, char *new, int i)
 
 t_reader			*read_directory(DIR *space, char *path, t_ls *meta, int i)
 {
-	t_reader		*r[2]; // 0 = head | 1 = tmp
+	t_reader		*r[2];
 	struct dirent	*dir;
 	struct stat		sb;
 	char			*new;

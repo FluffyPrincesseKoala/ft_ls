@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/19 17:36:31 by princesse         #+#    #+#             */
-/*   Updated: 2019/10/14 16:54:01 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/15 15:18:33 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,4 +32,5 @@ void				free_meta(t_ls *meta)
 		free_reader((*meta).file);
 	free_array((*meta).array);
 	free_array((*meta).err);
+	ft_strdel(&((*meta).new_path));
 }

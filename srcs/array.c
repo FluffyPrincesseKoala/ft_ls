@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/30 22:20:38 by princesse         #+#    #+#             */
-/*   Updated: 2019/10/15 12:28:15 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/15 14:24:32 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,7 @@ char		**array_add(char **array, char *add)
 {
 	char	**new;
 	int		i;
-	int		new_len;
 
-	new_len = 0;
 	i = array_len(array);
 	if ((!i) || !add)
 		return (array);
@@ -63,16 +61,8 @@ char		**array_add(char **array, char *add)
 		return (array);
 	i = -1;
 	while (array[++i])
-	{
-		new[i] = (((int)ft_strlen(array[i]) - 1
-				== (new_len = (int)strlen_rdelim(array[i], '/'))
-				&& (int)strlen_rdelim(add, '/') >= 1))
-				? ft_strndup(array[i], new_len) : ft_strdup(array[i]);
-	}
-	new[i] = (((int)ft_strlen(array[i]) - 1
-				== (new_len = (int)strlen_rdelim(add, '/'))
-				&& (int)strlen_rdelim(add, '/') >= 1))
-				? ft_strndup(add, new_len) : ft_strdup(add);
+		new[i] =  ft_strdup(array[i]);
+	new[i] =  ft_strdup(add);
 	new[++i] = NULL;
 	free_array(array);
 	return (new);

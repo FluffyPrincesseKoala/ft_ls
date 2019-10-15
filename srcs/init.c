@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/11 17:22:32 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/14 17:01:10 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/15 15:18:26 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,5 +78,6 @@ t_ls		init_arg(void)
 	new.file = NULL;
 	new.err = NULL;
 	new.array = NULL;
+	new.new_path = NULL;
 	return (new);
 }

@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/30 15:24:04 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/14 17:19:40 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/15 13:01:27 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,8 @@
 # define BLUE(X) 		ft_putstr("\033[0;34m"); ft_putstr(X);
 # define CYAN(X) 		ft_putstr("\033[0;36m"); ft_putstr(X);
 # define RESET() 		ft_putstr("\033[0m");
-# define DEL()			ft_strdel(&tmp);ft_strdel(&new);ft_strdel(&name);
+# define DEL()			ft_strdel(&tmp_path);ft_strdel(&new_path);
+# define DIR_NOT_A(S,D)	(S_ISDIR(S)&&ft_strcmp(D, ".")&&ft_strcmp(D, ".."))
 
 typedef struct		s_opt
 {
@@ -75,6 +76,7 @@ typedef struct		s_ls
 	char			**array;
 	char			**err;
 	int				array_len;
+	char			*new_path;
 }					t_ls;
 
 t_reader			*open_directory(t_ls *meta);

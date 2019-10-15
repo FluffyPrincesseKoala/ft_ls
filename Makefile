@@ -6,11 +6,11 @@
 #    By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/02/01 15:17:18 by cylemair          #+#    #+#              #
-#    Updated: 2019/10/14 17:08:34 by cylemair         ###   ########.fr        #
+#    Updated: 2019/10/15 12:35:40 by cylemair         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-CC		=		gcc -g3 #-fsanitize=address
+CC		=		gcc -g3
 
 LDFLAGS	=		-L libft/ -lft
 
@@ -32,6 +32,7 @@ SRC		=		srcs/main.c 			\
 				srcs/string.c 			\
 				srcs/directory.c		\
 				srcs/init.c				\
+				srcs/reader.c			\
 
 DIR		=		includes/
 
@@ -40,13 +41,15 @@ OBJS	=		$(SRC:.c=.o)
 all: $(NAME)
 
 $(NAME): $(OBJS)
-#	@make re -C libft/
+	make -C libft/
 	$(CC)  -o $(NAME) $(OBJS) $(LDFLAGS)
 
 clean:
+	make clean -C libft/
 	$(RM) $(OBJS)
 
 fclean: clean
+	make fclean -C libft/
 	$(RM) $(NAME)
 
 re: fclean all

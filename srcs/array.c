@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/30 22:20:38 by princesse         #+#    #+#             */
-/*   Updated: 2019/10/15 14:24:32 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/15 19:12:22 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,8 @@ char		**array_add(char **array, char *add)
 		return (array);
 	i = -1;
 	while (array[++i])
-		new[i] =  ft_strdup(array[i]);
-	new[i] =  ft_strdup(add);
+		new[i] = ft_strdup(array[i]);
+	new[i] = ft_strdup(add);
 	new[++i] = NULL;
 	free_array(array);
 	return (new);

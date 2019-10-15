@@ -6,13 +6,13 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 17:07:44 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/15 14:38:50 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/15 20:39:13 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/ft_ls.h"
 
-void		more_print_l(t_reader *current)
+void				more_print_l(t_reader *current)
 {
 	ft_putchar(' ');
 	ft_putnbr(current->sb.st_nlink);
@@ -42,9 +42,11 @@ void		print_l(t_ls meta, t_reader *current)
 	{
 		r = readlink(current->path, linkname, _PC_PATH_MAX);
 		if (r != -1)
+		{
 			linkname[r] = '\0';
-		ft_putstr(" -> ");
-		ft_putstr(linkname);
+			ft_putstr(" -> ");
+			ft_putstr(linkname);
+		}
 	}
 	ft_putstr("\n\033[0m");
 }

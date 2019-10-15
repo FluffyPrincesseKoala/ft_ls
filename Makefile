@@ -6,11 +6,11 @@
 #    By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/02/01 15:17:18 by cylemair          #+#    #+#              #
-#    Updated: 2019/10/15 12:35:40 by cylemair         ###   ########.fr        #
+#    Updated: 2019/10/15 18:05:37 by cylemair         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-CC		=		gcc -g3
+CC		=		gcc -ggdb3
 
 LDFLAGS	=		-L libft/ -lft
 

@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/30 15:24:04 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/15 13:01:27 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/15 17:33:29 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ typedef struct		s_ls
 	char			**array;
 	char			**err;
 	int				array_len;
-	char			*new_path;
 }					t_ls;
 
 t_reader			*open_directory(t_ls *meta);

@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/15 15:13:59 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/15 16:03:16 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/15 18:06:09 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,5 +32,5 @@ int					main(int ac, char **av)
 	reader(meta, meta.file, meta.file, 1);
 	output_error((char const **)meta.err);
 	free_meta(&meta);
-	//while (1);
+//	while (1);
 }

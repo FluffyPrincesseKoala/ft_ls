@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/15 12:34:58 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/15 21:20:21 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/16 18:55:07 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,20 @@
 
 int					link_or_not(const char *path, struct stat *sb, t_ls meta)
 {
+	int				ret;
+
+	errno = 0;
 	if (meta.arg.l)
 	{
-		return (lstat(path, sb));
+		ret = lstat(path, sb);
 	}
 	else
-		return (stat(path, sb));
+	{
+		ret = lstat(path, sb);
+		if (S_ISLNK((*sb).st_mode))
+			stat(path, sb);
+	}
+	return (ret);
 }
 
 t_reader			*go_sub(struct dirent *dir, t_ls *meta, char *new, int i)
@@ -31,9 +39,11 @@ t_reader			*go_sub(struct dirent *dir, t_ls *meta, char *new, int i)
 	if (!ft_strcmp(dir->d_name, ".") || !ft_strcmp(dir->d_name, ".."))
 		return (NULL);
 	if (!(sub = opendir(new)))
-		(*meta).err = d_error((*meta).err, (*meta).array, i, new);
+		(*meta).err = d_error((*meta).err, (*meta).array, i, new, meta);
 	else
+	{
 		return (read_directory(sub, new, meta, i));
+	}
 	return (NULL);
 }
 
@@ -52,11 +62,11 @@ t_reader			*read_directory(DIR *space, char *path, t_ls *meta, int i)
 		{
 			new = ft_strjoin_free(path, ft_strjoin("/", dir->d_name), 2);
 			if (new && link_or_not(new, &sb, *meta))
-				(*meta).err = stat_error((*meta).err, (*meta).array, i, new);
-			if (new && A_LEN((*meta).err) == (*meta).array_len)
+				(*meta).err = stat_error((*meta).err, (*meta).array, i, new, meta);
+			if (new)
 			{
 				r[1] = append(&(r[0]), create(sb, (char*)dir->d_name, new));
-				if (S_ISDIR(sb.st_mode))
+				if (S_ISDIR(sb.st_mode) && A_LEN((*meta).err) == (*meta).array_len)
 					(r[1])->sub = go_sub(dir, meta, new, i);
 			}
 			ft_strdel(&new);
@@ -81,9 +91,9 @@ t_reader			*open_directory(t_ls *meta)
 	{
 		(*meta).array_len = A_LEN((*meta).err);
 		if (link_or_not((char*)(*meta).array[i], &sb, *meta))
-			(*meta).err = stat_error((*meta).err, (*meta).array, i, NULL);
+			(*meta).err = stat_error((*meta).err, (*meta).array, i, NULL, meta);
 		if ((S_ISDIR(sb.st_mode)) && !(buff = opendir((*meta).array[i])))
-			(*meta).err = d_error((*meta).err, (*meta).array, i, NULL);
+			(*meta).err = d_error((*meta).err, (*meta).array, i, NULL, meta);
 		if (A_LEN((*meta).err) == (*meta).array_len)
 		{
 			new = append(&head, create(sb, (*meta).array[i], (*meta).array[i]));

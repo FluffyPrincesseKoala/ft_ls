@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/30 22:08:06 by princesse         #+#    #+#             */
-/*   Updated: 2019/10/15 19:41:32 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/16 20:23:04 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,24 @@ t_reader		*create(struct stat	sb, char *name, char *path)
 
 void			reader_sub(t_ls meta, t_reader *current, int root)
 {
+	char	linkname[PATH_MAX];
+	ssize_t r;
+
 	if (current->sub)
 	{
 		if (((array_len(meta.array) > 1 && root) || meta.arg.br)
 			&& (is_full(current->sub) || meta.arg.a))
 		{
-			GREEN(current->path);
+			r = readlink(current->path, linkname, PATH_MAX);
+			if (r != -1)
+			{
+				linkname[r] = '\0';
+				GREEN(linkname);
+			}
+			else
+			{
+				GREEN(current->path);
+			}
 			ft_putstr(":\n");
 			RESET();
 		}

@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/02 19:57:11 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/11 19:38:14 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/16 19:15:33 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,10 @@ int					cmp_name(t_reader *a, t_reader *b)
 int					cmp_time(t_reader *a, t_reader *b)
 {
 	if ((int)a->sb.st_mtime > (int)b->sb.st_mtime)
-		return (1);
+		return (-1);
 	if ((int)a->sb.st_mtime == (int)b->sb.st_mtime)
 		return (cmp_name(a, b));
-	return (-1);
+	return (1);
 }
 
 int					rcmp_name(t_reader *a, t_reader *b)
@@ -59,8 +59,8 @@ int					rcmp_name(t_reader *a, t_reader *b)
 int					rcmp_time(t_reader *a, t_reader *b)
 {
 	if ((int)a->sb.st_mtime > (int)b->sb.st_mtime)
-		return (-1);
+		return (1);
 	if ((int)a->sb.st_mtime == (int)b->sb.st_mtime)
 		return (rcmp_name(a, b));
-	return (1);
+	return (-1);
 }

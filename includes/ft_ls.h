@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/30 15:24:04 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/15 17:33:29 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/16 20:08:58 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,11 @@
 # define _OPEN			"ls: impossible d'ouvrir le répertoire \'"
 # define _UNKNOW 		"\': No such file or directory"
 # define _ACCES 		"\': Permission denied"
-# define _LOOP	 		"\': directory causes a cycle"
+# define _LOOP	 		"\': directory causes a cycle\0"
 # define _TOOLONG 		"\': Is too long"
 # define _NOMEM 		"\': Out of memory"
 # define _NOTDIR 		"\': Not a directory"
+# define _BAD_FD		"\': Bad file descriptor"
 # define _SIXMONTH		(15768000)
 # define _PL(X)			ft_putendl(X);
 # define PUT(X)			ft_putstr(X);
@@ -46,9 +47,13 @@
 # define GREEN(X) 		ft_putstr("\033[0;32m"); ft_putstr(X);
 # define BLUE(X) 		ft_putstr("\033[0;34m"); ft_putstr(X);
 # define CYAN(X) 		ft_putstr("\033[0;36m"); ft_putstr(X);
+# define PURPLE(X)		ft_putstr("\033[0;49;35m"); ft_putstr(X);
+# define YELLOW(X)		ft_putstr("\033[7;49;33m"); ft_putstr(X);
+# define YELLOW_2(X)	ft_putstr("\033[0;49;33m"); ft_putstr(X);
 # define RESET() 		ft_putstr("\033[0m");
 # define DEL()			ft_strdel(&tmp_path);ft_strdel(&new_path);
 # define DIR_NOT_A(S,D)	(S_ISDIR(S)&&ft_strcmp(D, ".")&&ft_strcmp(D, ".."))
+# define PATH_MAX		(1024)
 
 typedef struct		s_opt
 {
@@ -75,6 +80,7 @@ typedef struct		s_ls
 	t_reader		*file;
 	char			**array;
 	char			**err;
+	int				error_sd;
 	int				array_len;
 }					t_ls;
 
@@ -107,9 +113,12 @@ void				print_right(mode_t	st_mode);
 void				more_print_l(t_reader *current);
 void				print_time(t_reader *current);
 void				print_l(t_ls meta, t_reader *current);
+void				color_name(t_reader *current);
 int					get_total(t_reader *current);
-char				**stat_error(char **out, char**array, int index, char *str);
-char				**d_error(char **out, char **array, int index, char *str);
+char				**stat_error(char **out, char**array, int index, char *str,
+								t_ls *meta);
+char				**d_error(char **out, char **array, int index, char *str,
+								t_ls *meta);
 void				output_error(char const **out);
 int					strlen_rdelim(const char *str, int c);
 int					is_next_dir(t_reader *current);

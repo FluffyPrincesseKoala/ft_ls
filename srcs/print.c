@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/10 21:36:12 by princesse         #+#    #+#             */
-/*   Updated: 2019/10/14 17:07:40 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/16 15:31:33 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void		print_basic(t_ls meta, t_reader *current, int root)
 	if (!meta.arg.a && (!ft_strcmp(current->name, ".")
 		|| !ft_strcmp(current->name, "..") || (current->name[0] == '.')))
 		return ;
-	ft_putstr(current->name);
+	color_name(current);
 	if (current->next && !(root && is_next_dir(current)))
 		ft_putchar('\t');
 	else if (current->next || meta.arg.br)

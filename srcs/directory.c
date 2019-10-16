@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/11 17:17:25 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/15 12:34:42 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/16 17:12:07 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,6 @@ int					is_next_dir(t_reader *current)
 int					get_total(t_reader *current)
 {
 	if (current->next)
-		return ((current->sb.st_blocks / 2) + get_total(current->next));
+		return ((current->sb.st_blocks) + get_total(current->next));
 	return (current->sb.st_blocks / 2);
 }

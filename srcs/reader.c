@@ -12,7 +12,8 @@
 
 #include "../includes/ft_ls.h"
 
-int					link_or_not(const char *path, struct stat *sb, t_ls meta)
+int					link_or_not(const char *path, struct stat *sb, t_ls meta,
+													char *name)
 {
 	int				ret;
 
@@ -24,7 +25,7 @@ int					link_or_not(const char *path, struct stat *sb, t_ls meta)
 	else
 	{
 		ret = lstat(path, sb);
-		if (S_ISLNK((*sb).st_mode))
+		if (S_ISLNK((*sb).st_mode) && !ft_strcmp(path, name))
 			stat(path, sb);
 	}
 	return (ret);
@@ -61,7 +62,7 @@ t_reader			*read_directory(DIR *space, char *path, t_ls *meta, int i)
 		if (ft_strncmp(dir->d_name, ".", 1) || (*meta).arg.a)
 		{
 			new = ft_strjoin_free(path, ft_strjoin("/", dir->d_name), 2);
-			if (new && link_or_not(new, &sb, *meta))
+			if (new && link_or_not(new, &sb, *meta, dir->d_name))
 				(*meta).err = stat_error((*meta).err, (*meta).array, i, new, meta);
 			if (new)
 			{
@@ -90,7 +91,7 @@ t_reader			*open_directory(t_ls *meta)
 	while ((*meta).array[++i])
 	{
 		(*meta).array_len = A_LEN((*meta).err);
-		if (link_or_not((char*)(*meta).array[i], &sb, *meta))
+		if (link_or_not((char*)(*meta).array[i], &sb, *meta, (*meta).array[i]))
 			(*meta).err = stat_error((*meta).err, (*meta).array, i, NULL, meta);
 		if ((S_ISDIR(sb.st_mode)) && !(buff = opendir((*meta).array[i])))
 			(*meta).err = d_error((*meta).err, (*meta).array, i, NULL, meta);

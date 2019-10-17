@@ -29,24 +29,12 @@ t_reader		*create(struct stat	sb, char *name, char *path)
 
 void			reader_sub(t_ls meta, t_reader *current, int root)
 {
-	char	linkname[PATH_MAX];
-	ssize_t r;
-
 	if (current->sub)
 	{
 		if (((array_len(meta.array) > 1 && root) || meta.arg.br)
 			&& (is_full(current->sub) || meta.arg.a))
 		{
-			r = readlink(current->path, linkname, PATH_MAX);
-			if (r != -1)
-			{
-				linkname[r] = '\0';
-				GREEN(linkname);
-			}
-			else
-			{
-				GREEN(current->path);
-			}
+			GREEN(current->path);
 			ft_putstr(":\n");
 			RESET();
 		}

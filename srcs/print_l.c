@@ -14,10 +14,14 @@
 
 void		more_print_l(t_reader *current)
 {
+	struct passwd *tmp;
 	ft_putchar(' ');
 	ft_putnbr(current->sb.st_nlink);
 	ft_putchar(' ');
-	ft_putstr((getpwuid(current->sb.st_uid))->pw_name);
+	tmp = getpwuid(current->sb.st_uid);
+	if (tmp && tmp->pw_name)
+		ft_putstr(tmp->pw_name);
+	//ft_putstr((getpwuid(current->sb.st_uid))->pw_name);
 	ft_putchar('\t');
 	ft_putstr((getgrgid(current->sb.st_gid))->gr_name);
 	ft_putchar('\t');

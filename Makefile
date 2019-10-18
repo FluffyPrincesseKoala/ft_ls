@@ -6,11 +6,11 @@
 #    By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/02/01 15:17:18 by cylemair          #+#    #+#              #
-#    Updated: 2019/10/16 14:03:53 by cylemair         ###   ########.fr        #
+#    Updated: 2019/10/18 15:28:48 by cylemair         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-CC		=		gcc
+CC		=		gcc -g3 #-fsanitize=address
 
 LDFLAGS	=		-L libft/ -lft -I includes/
 

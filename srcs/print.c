@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/10 21:36:12 by princesse         #+#    #+#             */
-/*   Updated: 2019/10/16 15:31:33 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/19 20:49:35 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,19 +36,19 @@ void		print_right(mode_t st_mode)
 	ft_putstr((st_mode & S_IRUSR) ? "r" : "-");
 	ft_putstr((st_mode & S_IWUSR) ? "w" : "-");
 	if (st_mode & S_ISUID)
-		ft_putstr("s");
+		ft_putstr((st_mode & S_IXUSR) ? "s" : "S");
 	else
 		ft_putstr((st_mode & S_IXUSR) ? "x" : "-");
 	ft_putstr((st_mode & S_IRGRP) ? "r" : "-");
 	ft_putstr((st_mode & S_IWGRP) ? "w" : "-");
 	if (st_mode & S_ISGID)
-		ft_putstr("s");
+		ft_putstr((st_mode & S_IXGRP) ? "s" : "S");
 	else
 		ft_putstr((st_mode & S_IXGRP) ? "x" : "-");
 	ft_putstr((st_mode & S_IROTH) ? "r" : "-");
 	ft_putstr((st_mode & S_IWOTH) ? "w" : "-");
 	if ((st_mode & S_ISVTX))
-		ft_putstr("t");
+		ft_putstr((st_mode & S_IXOTH) ? "t" : "T");
 	else
 		ft_putstr((st_mode & S_IXOTH) ? "x" : "-");
 	ft_putchar(' ');

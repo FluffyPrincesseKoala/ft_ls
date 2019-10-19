@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/11 17:22:32 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/19 20:02:41 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/19 20:20:12 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ t_ls		set_arg(t_ls new, char **av)
 	while (av[++y])
 	{
 		x = -1;
-		is_opt = (is_path) ? 0 : is_opt;
+		is_opt = 0;
 		is_path = create_or_add(&new.array, av[y], is_path);
 		while (av[y][++x] && !is_path)
 		{

@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 17:07:44 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/19 19:43:13 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/19 20:50:30 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,8 @@ void				more_print_l(t_reader *current)
 	struct passwd	*uid;
 	struct group	*gid;
 
-	ft_putchar(' ');
 	ft_putnbr(current->sb.st_nlink);
-	ft_putchar(' ');
+	ft_putchar('\t');
 	if ((uid = getpwuid(current->sb.st_uid)))
 		ft_putstr(uid->pw_name);
 	ft_putchar('\t');
@@ -39,7 +38,7 @@ void				more_print_l(t_reader *current)
 	ft_putchar('\t');
 }
 
-void		color_name(t_reader *current)
+void				color_name(t_reader *current)
 {
 	if (S_ISLNK(current->sb.st_mode))
 	{
@@ -66,10 +65,10 @@ void		color_name(t_reader *current)
 	ft_putstr("\033[0m");
 }
 
-void		print_l(t_ls meta, t_reader *current)
+void				print_l(t_ls meta, t_reader *current)
 {
-	char	linkname[PATH_MAX];
-	ssize_t r;
+	char			linkname[PATH_MAX];
+	ssize_t			r;
 
 	if (!meta.arg.a && (!ft_strcmp(current->name, ".")
 		|| !ft_strcmp(current->name, "..")))

@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/30 15:24:04 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/16 20:08:58 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/19 20:09:29 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,9 @@
 # define RESET() 		ft_putstr("\033[0m");
 # define DEL()			ft_strdel(&tmp_path);ft_strdel(&new_path);
 # define DIR_NOT_A(S,D)	(S_ISDIR(S)&&ft_strcmp(D, ".")&&ft_strcmp(D, ".."))
+# define READ_SUB()		(A_LEN((*meta).err) == (*meta).array_len && new)
 # define PATH_MAX		(1024)
+# define EXIT_BAD_OPT	(-1)
 
 typedef struct		s_opt
 {
@@ -95,7 +97,7 @@ int					array_len(char **array);
 void				free_array(char **array);
 char				**array_add(char **array, char *add);
 char				**create_array(char *str);
-int					create_or_add(char ***array, char *add);
+int					create_or_add(char ***array, char *add, int is_path);
 void				free_reader(t_reader *current);
 void				free_meta(t_ls *meta);
 void				reader(t_ls meta, t_reader *head, t_reader *current,
@@ -115,10 +117,8 @@ void				print_time(t_reader *current);
 void				print_l(t_ls meta, t_reader *current);
 void				color_name(t_reader *current);
 int					get_total(t_reader *current);
-char				**stat_error(char **out, char**array, int index, char *str,
-								t_ls *meta);
-char				**d_error(char **out, char **array, int index, char *str,
-								t_ls *meta);
+char				**stat_error(char **out, char *str, t_ls *meta);
+char				**d_error(char **out, char *str, t_ls *meta);
 void				output_error(char const **out);
 int					strlen_rdelim(const char *str, int c);
 int					is_next_dir(t_reader *current);

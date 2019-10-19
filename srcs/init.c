@@ -6,11 +6,29 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/11 17:22:32 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/16 17:43:38 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/19 20:02:41 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/ft_ls.h"
+
+void		error_arg(char *name, char c)
+{
+	ft_putstr("\033[1;31m");
+	ft_putstr_fd("ls: ", 2);
+	ft_putstr_fd("invalid option", 2);
+	ft_putstr_fd(": ", 2);
+	if (name)
+		ft_putstr_fd(name, 2);
+	else
+	{
+		ft_putchar_fd('-', 2);
+		ft_putchar_fd(c, 2);
+	}
+	ft_putstr_fd("\n", 2);
+	RESET();
+	exit(EXIT_BAD_OPT);
+}
 
 t_opt		read_arg(t_opt arg, char c)
 {
@@ -24,19 +42,9 @@ t_opt		read_arg(t_opt arg, char c)
 		arg.r = 1;
 	else if (c == 't')
 		arg.t = 1;
+	else
+		error_arg(NULL, c);
 	return (arg);
-}
-
-void		error_arg(char *name)
-{
-	ft_putstr("\033[1;31m");
-	ft_putstr_fd("ls: ", 2);
-	ft_putstr_fd("invalid option", 2);
-	ft_putstr_fd(": ", 2);
-	ft_putstr_fd(name, 2);
-	ft_putstr_fd("\n", 2);
-	RESET();
-	exit(-1);
 }
 
 t_ls		set_arg(t_ls new, char **av)
@@ -51,16 +59,18 @@ t_ls		set_arg(t_ls new, char **av)
 	while (av[++y])
 	{
 		x = -1;
-		is_opt = 0;
-		is_path = create_or_add(&new.array, av[y]);
+		is_opt = (is_path) ? 0 : is_opt;
+		is_path = create_or_add(&new.array, av[y], is_path);
 		while (av[y][++x] && !is_path)
 		{
-			is_opt = (av[y][x] == '-') ? 1 : is_opt;
-			new.arg = (is_opt) ? read_arg(new.arg, av[y][x]) : new.arg;
+			if (is_opt)
+				new.arg = read_arg(new.arg, av[y][x]);
+			else
+				is_opt = (av[y][x] == '-') ? 1 : is_opt;
 		}
 		if (is_opt && !(OPTION(new)))
 		{
-			error_arg(av[y]);
+			error_arg(av[y], 0);
 		}
 	}
 	return (new);

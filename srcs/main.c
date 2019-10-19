@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/15 15:13:59 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/16 19:57:07 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/19 19:46:19 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,8 @@ int					main(int ac, char **av)
 {
 	t_ls			meta;
 
-	(void)ac;
 	meta = set_arg(init_arg(), av);
-	if (meta.array == NULL)
+	if (meta.array == NULL || ac == 1)
 		meta.array = create_array(".");
 	meta.file = open_directory(&meta);
 	if (meta.file)

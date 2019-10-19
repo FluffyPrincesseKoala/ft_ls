@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/08 16:44:16 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/16 19:57:03 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/19 20:04:55 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,61 +30,49 @@ char		*concat(char *error, char *name, t_ls *meta)
 	return (NULL);
 }
 
-char		**stat_error(char **out, char **array, int index, char *str,
-						t_ls *meta)
+char		**stat_error(char **out, char *str, t_ls *meta)
 {
 	char	*new;
 	char	*name;
 
-	name = ft_strdup((str) ? str : array[index]);
+	name = ft_strdup((str) ? str : "");
 	new = NULL;
 	if (errno == EACCES)
 		new = concat(_ACCES, name, meta);
 	else if (errno == EBADF)
-	{
 		new = concat(_BAD_FD, name, meta);
-	}
 	else if (errno == ELOOP)
-	{
 		new = concat(_LOOP, name, meta);
-	}
 	else if (errno == ENAMETOOLONG)
 		new = concat(_TOOLONG, name, meta);
 	else if (errno == ENOENT)
-	{
 		new = concat(_UNKNOW, name, meta);
-	}
 	else if (errno == ENOMEM)
 		new = concat(_NOMEM, name, meta);
 	if (new)
 	{
 		out = (!out) ? create_array(new) : array_add(out, new);
 		ft_strdel(&new);
-		ft_strdel(&name);
 	}
+	ft_strdel(&name);
 	return (out);
 }
 
-char		**d_error(char **out, char **array, int index, char *str,
-						t_ls *meta)
+char		**d_error(char **out, char *str, t_ls *meta)
 {
 	char	*new;
 	char	*name;
 
-	name = ft_strdup((str) ? str : array[index]);
+	name = ft_strdup((str) ? str : "");
 	new = NULL;
 	if (errno == EACCES)
 		new = concat(_ACCES, name, meta);
 	else if (errno == ELOOP)
-	{
 		new = concat(_LOOP, name, meta);
-	}
 	else if (errno == ENAMETOOLONG)
 		new = concat(_TOOLONG, name, meta);
 	else if (errno == ENOENT)
-	{
 		new = concat(_UNKNOW, name, meta);
-	}
 	else if (errno == ENOMEM)
 		new = concat(_NOMEM, name, meta);
 	else if (errno == ENOTDIR)
@@ -93,8 +81,8 @@ char		**d_error(char **out, char **array, int index, char *str,
 	{
 		out = (!out) ? create_array(new) : array_add(out, new);
 		ft_strdel(&new);
-		ft_strdel(&name);
 	}
+	ft_strdel(&name);
 	return (out);
 }
 
@@ -106,7 +94,7 @@ void		output_error(char const **out)
 	RED("");
 	while (out && out[i])
 	{
-		_PL(out[i]);
+		ft_putendl_fd(out[i], 2);
 		i++;
 	}
 	RESET();

@@ -6,24 +6,25 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/14 17:07:44 by cylemair          #+#    #+#             */
-/*   Updated: 2019/10/16 20:17:37 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/19 19:43:13 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/ft_ls.h"
 
-void		more_print_l(t_reader *current)
+void				more_print_l(t_reader *current)
 {
-	struct passwd *tmp;
+	struct passwd	*uid;
+	struct group	*gid;
+
 	ft_putchar(' ');
 	ft_putnbr(current->sb.st_nlink);
 	ft_putchar(' ');
-	tmp = getpwuid(current->sb.st_uid);
-	if (tmp && tmp->pw_name)
-		ft_putstr(tmp->pw_name);
-	//ft_putstr((getpwuid(current->sb.st_uid))->pw_name);
+	if ((uid = getpwuid(current->sb.st_uid)))
+		ft_putstr(uid->pw_name);
 	ft_putchar('\t');
-	ft_putstr((getgrgid(current->sb.st_gid))->gr_name);
+	if ((gid = getgrgid(current->sb.st_gid)))
+		ft_putstr(gid->gr_name);
 	ft_putchar('\t');
 	if (S_ISCHR(current->sb.st_mode) || S_ISBLK(current->sb.st_mode))
 	{
@@ -78,7 +79,7 @@ void		print_l(t_ls meta, t_reader *current)
 	color_name(current);
 	if (S_ISLNK(current->sb.st_mode))
 	{
-		r = readlink(current->path, linkname, PATH_MAX);
+		r = readlink(current->path, linkname, PATH_MAX - 1);
 		if (r != -1)
 		{
 			linkname[r] = '\0';

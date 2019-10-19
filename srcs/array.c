@@ -6,7 +6,7 @@
 /*   By: cylemair <cylemair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/30 22:20:38 by princesse         #+#    #+#             */
-/*   Updated: 2019/10/15 19:12:22 by cylemair         ###   ########.fr       */
+/*   Updated: 2019/10/19 19:50:24 by cylemair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,11 +68,8 @@ char		**array_add(char **array, char *add)
 	return (new);
 }
 
-int			create_or_add(char ***array, char *add)
+int			create_or_add(char ***array, char *add, int is_path)
 {
-	int		is_path;
-
-	is_path = 0;
 	if ((is_path = (add[0] != '-') ? 1 : is_path))
 		*array = (!*array) ? create_array(add) : array_add(*array, add);
 	return (is_path);
